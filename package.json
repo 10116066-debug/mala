@@ -1,6 +1,7 @@
 {
   "name": "token-bot",
   "version": "1.0.0",
+  "description": "Discord token stealer bot 2025",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
