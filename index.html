@@ -1,132 +1,48 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>Facebook login (DEMO)</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<style>
-body{
-  background:#f0f2f5;
-  font-family: Helvetica, Arial, sans-serif;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  height:100vh;
-}
-.card{
-  background:#fff;
-  width:360px;
-  padding:24px;
-  border-radius:8px;
-  box-shadow:0 2px 10px rgba(0,0,0,.15);
-  text-align:center;
-}
-.lang{
-  font-size:14px;
-  color:#65676b;
-  margin-bottom:6px;
-}
-.lang-img{
-  width:90px; /* tamaño mediano */
-  margin-bottom:14px;
-}
-.logo{
-  font-size:40px;
-  font-weight:700;
-  color:#1877f2;
-  margin-bottom:10px;
-}
-input{
-  width:100%;
-  padding:14px;
-  margin:8px 0;
-  font-size:16px;
-  border:1px solid #dddfe2;
-  border-radius:6px;
-}
-button{
-  width:100%;
-  padding:14px;
-  margin-top:10px;
-  font-size:18px;
-  font-weight:600;
-  background:#1877f2;
-  color:#fff;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
-}
-button:hover{background:#166fe5}
-.link{
-  display:block;
-  margin-top:14px;
-  font-size:14px;
-  color:#1877f2;
-  text-decoration:none;
-}
-.link:hover{text-decoration:underline}
-.msg{
-  margin-top:10px;
-  font-size:13px;
-  color:#d93025;
-}
-.bottom-img{
-  width:90px;
-  margin-top:18px;
-}
-</style>
+  <meta charset="UTF-8">
+  <title>FORGEX GAMES — Juegos Online</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div class="card">
+<header>
+  <h1>🎮 FORGEX GAMES</h1>
+  <nav>
+    <button onclick="filtrar('todos')">Todos</button>
+    <button onclick="filtrar('multiplayer')">Multijugador</button>
+    <button onclick="filtrar('minecraft')">Minecraft</button>
+    <button onclick="filtrar('accion')">Acción</button>
+  </nav>
+</header>
 
-  <div class="lang">Español</div>
-  <img class="lang-img" src="https://i.imgur.com/BGPquk8.png" alt="Idioma">
+<main class="games">
 
-  <div class="logo">Facebook</div>
+  <!-- EAGLERCRAFT -->
+  <div class="card minecraft multiplayer">
+    <img src="https://i.imgur.com/6XQk0yR.png">
+    <h3>Eaglercraft</h3>
+    <button onclick="abrirJuego('https://eaglercraft.com/mc/1.8.8/')">Jugar</button>
+  </div>
 
-  <form onsubmit="return validar()">
-    <input id="email" type="email"
-      placeholder="Correo electrónico"
-      required>
+  <!-- AMONG US ONLINE -->
+  <div class="card multiplayer">
+    <img src="https://i.imgur.com/z6ZQZzK.png">
+    <h3>Among Us Online</h3>
+    <button onclick="abrirJuego('https://amongus-online.net/')">Jugar</button>
+  </div>
 
-    <input type="password"
-      placeholder="Contraseña"
-      required>
+  <!-- KRUNKER -->
+  <div class="card accion multiplayer">
+    <img src="https://i.imgur.com/WgP3j8G.png">
+    <h3>Krunker.io</h3>
+    <button onclick="abrirJuego('https://krunker.io')">Jugar</button>
+  </div>
 
-    <button>Iniciar sesión</button>
+</main>
 
-    <div id="msg" class="msg"></div>
-  </form>
-
-  <a class="link" href="https://www.facebook.com" target="_blank">
-    ¿Olvidaste tu contraseña?
-  </a>
-
-  <a class="link" href="https://www.facebook.com" target="_blank">
-    Crear cuenta nueva
-  </a>
-
-  <img class="bottom-img" src="https://i.imgur.com/8ZpsYyJ.png" alt="Meta">
-
-</div>
-
-<script>
-function validar(){
-  const email = document.getElementById("email").value.trim();
-  const msg = document.getElementById("msg");
-
-  if(!email.endsWith("@gmail.com")){
-    msg.textContent = "El correo debe ser @gmail.com";
-    return false;
-  }
-
-  // Redirige a facebook.com
-  window.location.href = "https://www.facebook.com";
-  return false;
-}
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
-
