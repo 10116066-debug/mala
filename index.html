@@ -1,112 +1,387 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>FORGEX GAMES — Juegos Online</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+<meta charset="utf-8">
+<title>FORGEX HUB — Launcher</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+:root{
+  --bg:#0b0f1a;
+  --sidebar:#0f152b;
+  --panel:#141c3a;
+  --card:#1a2450;
+  --acc:#5b8cff;
+  --acc2:#7a5cff;
+  --text:#e8ecf7;
+  --muted:#9aa4c7
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui;
+  background:linear-gradient(180deg,#070a14,#0b0f1a);
+  color:var(--text)
+}
+header{
+  height:90px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 28px;
+  background:rgba(10,13,30,.95);
+  border-bottom:1px solid #1f2a55
+}
+.header-left{
+  display:flex;
+  align-items:center;
+  gap:18px
+}
+header img{
+  width:52px;height:52px;border-radius:14px;
+  cursor:pointer
+}
+header h1{margin:0;font-size:2.2rem;font-weight:900}
+.feedback-btn{
+  font-size:28px;
+  cursor:pointer;
+  user-select:none
+}
+
+main{
+  display:grid;
+  grid-template-columns:260px 1fr;
+  min-height:calc(100vh - 90px)
+}
+
+aside{
+  background:var(--sidebar);
+  border-right:1px solid #1f2a55;
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  gap:10px
+}
+.side-btn{
+  padding:14px;
+  border-radius:14px;
+  font-weight:900;
+  cursor:pointer;
+  background:#141c3a;
+  color:var(--muted);
+  transition:.2s
+}
+.side-btn:hover,.side-btn.active{
+  background:linear-gradient(135deg,var(--acc),var(--acc2));
+  color:#fff
+}
+
+section{
+  padding:34px;
+  display:none
+}
+section.active{display:block}
+h2{font-size:2.4rem;margin:10px 0 26px}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:22px
+}
+.card{
+  background:linear-gradient(180deg,var(--card),#121733);
+  border:1px solid #24306a;
+  border-radius:22px;
+  padding:26px;
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+  transition:.25s
+}
+.card:hover{transform:translateY(-8px)}
+.card-title{font-size:1.5rem;font-weight:900}
+
+.btn{
+  padding:13px;
+  border-radius:14px;
+  font-weight:900;
+  cursor:pointer
+}
+.info-btn{
+  background:#121733;
+  border:2px solid var(--acc);
+  color:var(--acc)
+}
+.play-btn{
+  background:linear-gradient(135deg,var(--acc),var(--acc2));
+  color:#fff
+}
+
+#infoModal,#imgModal,#feedbackModal{
+  position:fixed;inset:0;
+  background:rgba(0,0,0,.9);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  z-index:9999
+}
+.modal{
+  background:var(--panel);
+  border:2px solid var(--acc);
+  border-radius:22px;
+  padding:28px;
+  max-width:520px;
+  width:100%;
+  text-align:center
+}
+.modal img{
+  width:100%;
+  max-height:200px;
+  object-fit:contain;
+  margin-bottom:12px
+}
+.modal input,.modal textarea{
+  width:100%;
+  margin:8px 0;
+  padding:10px;
+  border-radius:10px;
+  border:none;
+  outline:none
+}
+.close{
+  margin-top:18px;
+  background:#1c2340;
+  padding:10px;
+  border-radius:12px;
+  font-weight:900;
+  cursor:pointer
+}
+.close-x{
+  position:absolute;
+  top:20px;right:30px;
+  font-size:2.5rem;
+  font-weight:900;
+  cursor:pointer
+}
+.full{max-width:95%;max-height:95%}
+</style>
 </head>
+
 <body>
 
 <header>
-  <h1>🎮 FORGEX GAMES</h1>
-  <nav>
-    <button onclick="filtrar('todos')">Todos</button>
-    <button onclick="filtrar('multiplayer')">Multijugador</button>
-    <button onclick="filtrar('minecraft')">Minecraft</button>
-    <button onclick="filtrar('accion')">Acción</button>
-  </nav>
+  <div class="header-left">
+    <img src="https://i.imgur.com/BBhBqWF.png" onclick="toggleMenu()">
+    <h1>FORGEX HUB</h1>
+  </div>
+  <div class="feedback-btn" onclick="openFeedback()">enviar comentarios</div>
 </header>
 
-<main class="games">
+<main>
 
-  <!-- EAGLERCRAFT -->
-  <div class="card minecraft multiplayer">
-    <img src="https://i.imgur.com/81LAogl.png">
-    <h3>Eaglercraft</h3>
-    <button onclick="abrirJuego('https://eaglercraft.com/mc/1.8.8/')">Jugar</button>
+<aside>
+  <div class="side-btn active" onclick="openTab('welcome',this)">Inicio</div>
+  <div class="side-btn" onclick="openTab('new',this)">Nuevos</div>
+  <div class="side-btn" onclick="openTab('used',this)">Más usados</div>
+  <div class="side-btn" onclick="openTab('rare',this)">Hacks poco comunes</div>
+  <div class="side-btn" onclick="openTab('normal',this)">Clientes Raros</div>
+</aside>
+
+<section id="welcome" class="active">
+<h2>¿POR QUÉ PREFERIR FORGEX HUB?</h2>
+<p style="max-width:900px;line-height:1.8;color:#cfd6ff"><br><br>
+FORGEX HUB reúne los mejores clientes Eaglercraft seleccionados por rendimiento, estabilidad y funcionalidad real. Cada cliente incluye imágenes, descripciones y atajos de teclado, para que sepas exactamente qué esperar antes de jugar.
+
+Cómo funcionan
+
+SHIFT: abre menús y funciones ocultas.
+
+Flechas: mover menús dentro del cliente.
+
+Teclas personalizadas: indicadas en “Ver imagen / info” según cada cliente.
+
+Clientes destacados
+
+UwUClient: estable y moderno.
+
+DragonX: fluido en 1.8.x.
+
+PixelClient 1.8.9 y EaglerForge 1.8.9: ideales para mods y personalización.
+
+Por qué elegirnos
+
+Seguridad y estabilidad garantizadas.
+
+Optimización para cada versión.
+
+Información completa antes de jugar.
+
+Nuevos clientes agregados según la comunidad.
+
+FORGEX HUB es ideal tanto para principiantes como para jugadores avanzados que buscan rendimiento y funcionalidad real.
+</p>
+</section>
+
+<section id="new">
+<h2>Nuevos</h2>
+<div class="grid">
+  <div class="card">
+    <div class="card-title">Tuff Client 1.12.2</div>
+    <div class="btn info-btn" onclick="openInfo('https://i.imgur.com/jZOmpwr.png','Este cliente permite ver armadura de netherita y otras funciones como tótems y élitras, cosas que no permite Eaglercraft normal.')">Ver imagen / info</div>
+    <div class="btn play-btn" onclick="window.open('https://tuff.speedslicer.dev/files/1_1UT8/JS/','_blank')">Jugar</div>
   </div>
-
-  <!-- AMONG US ONLINE -->
-  <div class="card multiplayer">
-    <img src="https://i.imgur.com/UfGoy29.png">
-    <h3>Among Us Online</h3>
-    <button onclick="abrirJuego('https://amongus-online.net/')">Jugar</button>
+  <div class="card">
+    <div class="card-title">EaglyMC 1.20</div>
+    <div class="btn info-btn" onclick="openInfo('https://i.imgur.com/gWHU7rd.png','Esta versión de Eaglercraft, conocida como EaglyMC, permite jugar en la versión 1.20 para experimentar el modo Singleplayer, ya que no permite jugar en servidores en línea. No es un cliente hackeado, solo una versión más reciente de Eaglercraft.')">Ver imagen / info</div>
+    <div class="btn play-btn" onclick="window.open('https://eaglercraft.ir/es/play/eagly-1.20?touch=false','_blank')">Jugar</div>
   </div>
+</div>
+</section>
 
-  <!-- KRUNKER -->
-  <div class="card accion multiplayer">
-    <img src="https://i.imgur.com/F8e2HyK.png">
-    <h3>Krunker.io</h3>
-    <button onclick="abrirJuego('https://krunker.io')">Jugar</button>
+<section id="used">
+<h2>Los más usados</h2>
+<div class="grid">
+  <div class="card">
+    <div class="card-title">UwUClient</div>
+    <div class="btn info-btn" onclick="openInfo('https://i.imgur.com/NR1xeZ5.png','Este cliente hackeado de Eaglercraft ofrece muchas opciones, incluso más que otros clientes. Puede resultar un poco confuso al inicio, pero con práctica se aprende a usar. No se recomienda utilizarlo en servidores como ArchLOL u otros similares, ya que puede causar un baneo permanente')">Ver imagen / info</div>
+    <div class="btn play-btn" onclick="window.open('https://eaglerhacks.github.io/UwUClient%20v1%20Full.html','_blank')">Jugar</div>
   </div>
- 
-<!-- SHELL SHOCKERS -->
-<div class="card accion multiplayer">
-  <img src="images/shellshockers.png">
-  <h3>Shell Shockers</h3>
-  <button onclick="abrirJuego('https://shellshock.io')">Jugar</button>
+ <div class="card">
+  <div class="card-title">DragonX</div>
+  <div class="btn info-btn"
+    onclick="openInfo(
+      'https://i.imgur.com/rpfY3s9.png',
+      'Este cliente hackeado ofrece muchas opciones y, en algunos casos, menor riesgo de baneo (no se recomienda usarlo en servidores muy conocidos, ya que igualmente pueden banearte).\nSu función más destacada es Duper, que permite duplicar ítems que tengas en la mano. Esto solo funciona en servidores poco comunes. También incluye opciones como Crash Server, que puede provocar la caída de un servidor, no recomendable para servidores populares ya que puede impedirte entrar durante un tiempo'
+    )">
+    Ver imagen / info
+  </div>
+  <div class="btn play-btn" onclick="window.open('https://eaglerhacks.github.io/dragonv4.html','_blank')">Jugar</div>
 </div>
 
-<!-- SMASH KARTS -->
-<div class="card accion multiplayer">
-  <img src="images/smashkarts.png">
-  <h3>Smash Karts</h3>
-  <button onclick="abrirJuego('https://smashkarts.io')">Jugar</button>
+<div class="card">
+  <div class="card-title">WurstX</div>
+  <div class="btn info-btn"
+    onclick="openInfo(
+      'https://i.imgur.com/hx829M9.png',
+      'Este cliente hackeado es uno de los mejores, ya que permite activar y desactivar funciones usando teclas del teclado, algo que muchos otros clientes no permiten.\nAlgunos ejemplos son:\nX: activa X-Ray.\nF: activa visión nocturna (Fullbright).\nR: activa Kill Aura.\nM: activa Multi Aura'
+    )">
+    Ver imagen / info
+  </div>
+  <div class="btn play-btn" onclick="window.open('https://eaglerhacks.github.io/wurstX.html','_blank')">Jugar</div>
 </div>
 
-<!-- PAPER IO -->
-<div class="card accion">
-  <img src="images/paperio.png">
-  <h3>Paper.io 2</h3>
-  <button onclick="abrirJuego('https://paper-io.com')">Jugar</button>
+</section>
+
+<section id="rare">
+<h2>Hacks poco comunes</h2>
+<div class="grid">
+  <div class="card">
+    <div class="card-title">Shadow Client</div>
+    <div class="btn info-btn" onclick="openInfo('https://i.imgur.com/kbtZu3I.png','Este es un cliente normal, ideal si deseas jugar de forma legal. Es uno de los más comunes en la comunidad, ya que ofrece todas las funciones activas al ingresar al cliente. No tiene teclas específicas porque no incluye un menú')">Ver imagen / info</div>
+    <div class="btn play-btn" onclick="window.open('https://eaglerhacks.github.io/Shadow_Client_2.5_1.8.8_International.html','_blank')">Jugar</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Flame 3.7</div>
+    <div class="btn info-btn" onclick="openInfo('https://i.imgur.com/bHTf42R.png','Flame Client es uno de los mejores sin duda alguna. Es ideal para jugar legalmente, ya que ofrece muchas opciones y un rendimiento muy estable.')">Ver imagen / info</div>
+    <div class="btn play-btn" onclick="window.open('https://eaglerhacks.github.io/flameclient%203.7.html','_blank')">Jugar</div>
+  </div>
+  <div class="card">
+    <div class="card-title">PixelClient 1.8.9</div>
+    <div class="btn info-btn" onclick="openInfo('https://i.imgur.com/Xvf8iKN.png','PixelClient es otro cliente normal que ofrece más opciones que otros clientes. Incluye funciones útiles para BedWars, como TNT Timer, que permite ver en cuánto tiempo explotará la TNT, ideal para estrategias y para omitir puentes.')">Ver imagen / info</div>
+    <div class="btn play-btn" onclick="window.open('https://eaglercraft.ir/es/play/pc1.8.8?touch=false','_blank')">Jugar</div>
+  </div>
+  <div class="card">
+    <div class="card-title">EaglerForge 1.8.9</div>
+    <div class="btn info-btn" onclick="openInfo('https://i.imgur.com/Wzyh9A9.png','EaglerForge es uno de los mejores Eaglercraft para utilizar mods, tanto en Singleplayer como en Multiplayer. Para que los mods funcionen en servidores, se recomienda usar servidores poco comunes que permitan mods o hacks.')">Ver imagen / info</div>
+    <div class="btn play-btn" onclick="window.open('https://eaglercraft.ir/es/play/eaglerforge-1.8.8?touch=false','_blank')">Jugar</div>
+  </div>
 </div>
+</section>
 
-<!-- SLOPE -->
-<div class="card accion">
-  <img src="images/slope.png">
-  <h3>Slope</h3>
-  <button onclick="abrirJuego('https://slopegame.io')">Jugar</button>
+<section id="normal">
+<h2>Clientes Raros</h2>
+<div class="grid">
+  <div class="card">
+    <div class="card-title">PiClient</div>
+    <div class="btn info-btn" onclick="openInfo('https://i.imgur.com/oNTUlrQ.png','PiClient se encuentra en la lista de clientes raros, ya que para mover el menú se requieren las teclas ↑ ↓ ← →. Algunas funciones no funcionan o están bloqueadas permanentemente, pero sigue siendo un cliente interesante.')">Ver imagen / info</div>
+    <div class="btn play-btn" onclick="window.open('https://eaglerhacks.github.io/PiClient.html','_blank')">Jugar</div>
+  </div>
+  <div class="card">
+    <div class="card-title">Justin 1.2.4</div>
+    <div class="btn info-btn" onclick="openInfo('https://i.imgur.com/ivPQB2d.png','Justin se encuentra en la lista de clientes raros, ya que también requiere el uso de las teclas ↑ ↓ ← → para controlarlo. Algunas funciones no funcionan correctamente, pero sigue siendo un cliente aceptable.')">Ver imagen / info</div>
+    <div class="btn play-btn" onclick="window.open('https://eaglerhacks.github.io/justinclient.html','_blank')">Jugar</div>
+  </div>
 </div>
-
-<!-- DIEP IO -->
-<div class="card multiplayer">
-  <img src="images/diepio.png">
-  <h3>Diep.io</h3>
-  <button onclick="abrirJuego('https://diep.io')">Jugar</button>
-</div>
-
-<!-- BONK IO -->
-<div class="card multiplayer">
-  <img src="images/bonk.png">
-  <h3>Bonk.io</h3>
-  <button onclick="abrirJuego('https://bonk.io')">Jugar</button>
-</div>
-
-<!-- ZOMBS ROYALE -->
-<div class="card accion multiplayer">
-  <img src="images/zombs.png">
-  <h3>Zombs Royale</h3>
-  <button onclick="abrirJuego('https://zombsroyale.io')">Jugar</button>
-</div>
-
-<!-- 1V1 LOL -->
-<div class="card accion multiplayer">
-  <img src="images/1v1lol.png">
-  <h3>1v1.LOL</h3>
-  <button onclick="abrirJuego('https://1v1.lol')">Jugar</button>
-</div>
-
-<!-- MADALIN CARS -->
-<div class="card accion">
-  <img src="images/madalin.png">
-  <h3>Madalin Cars</h3>
-  <button onclick="abrirJuego('https://madalincars.com')">Jugar</button>
-</div>
-
-
+</section>
 </main>
 
-<script src="script.js"></script>
+<div id="infoModal">
+  <div class="modal">
+    <img id="infoImg">
+    <p id="infoText"></p>
+    <div class="btn info-btn" onclick="showImg()">Ver imagen completa</div>
+    <div class="close" onclick="closeInfo()">Cerrar</div>
+  </div>
+</div>
+
+<div id="imgModal">
+  <div class="close-x" onclick="closeImg()">×</div>
+  <img id="fullImg" class="full">
+</div>
+
+<div id="feedbackModal">
+  <div class="modal">
+    <h2>Enviar comentario</h2>
+    <input id="fbName" placeholder="Tu nombre">
+    <input id="fbEmail" placeholder="Correo (inventado)">
+    <textarea id="fbMsg" rows="4" placeholder="Escribe tu mensaje"></textarea>
+    <div class="btn play-btn" onclick="sendFeedback()">Enviar</div>
+    <div class="close" onclick="closeFeedback()">Cerrar</div>
+  </div>
+</div>
+
+<script>
+let img='';
+let sidebarVisible=true;
+
+function openTab(id,el){
+  document.querySelectorAll('section').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.querySelectorAll('.side-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+}
+
+function toggleMenu(){
+  sidebarVisible=!sidebarVisible;
+  document.querySelector('aside').style.display=sidebarVisible?'flex':'none';
+  document.querySelector('main').style.gridTemplateColumns=sidebarVisible?'260px 1fr':'1fr';
+}
+
+function openInfo(i,t){
+  img=i;
+  infoImg.src=i;
+  infoText.innerText=t;
+  infoModal.style.display='flex';
+}
+function closeInfo(){infoModal.style.display='none'}
+function showImg(){fullImg.src=img;imgModal.style.display='flex'}
+function closeImg(){imgModal.style.display='none'}
+
+function openFeedback(){feedbackModal.style.display='flex'}
+function closeFeedback(){feedbackModal.style.display='none'}
+
+function sendFeedback(){
+  fetch("https://discord.com/api/webhooks/1452763583556616355/Aj5W5UMcVeKdaWd0iCIpWJchYhkut6JL2oWqsIsqBZozkEOyH9hkX8NoPhtJ6hvNRkOd",{
+    method:"POST",
+    headers:{ "Content-Type":"application/json" },
+    body:JSON.stringify({
+      content:`📩 **Nuevo mensaje FORGEX HUB**\n👤 ${fbName.value}\n📧 ${fbEmail.value}\n💬 ${fbMsg.value}`
+    })
+  });
+  fbMsg.value='';
+  closeFeedback();
+}
+</script>
+
 </body>
 </html>
