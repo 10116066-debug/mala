@@ -2,176 +2,131 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>FORGEX Comentarios</title>
+<title>Facebook login (DEMO)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-:root{--bg:#f2f2f2;--card:#fff;--text:#111;--muted:#666;--primary:#2563eb}
-body.dark{--bg:#121212;--card:#1e1e1e;--text:#eee;--muted:#aaa}
-body{margin:0;font-family:Arial;background:var(--bg);color:var(--text)}
-header{background:var(--card);padding:12px 16px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 1px 4px rgba(0,0,0,.1)}
-.container{max-width:800px;margin:auto;padding:16px}
-.card{background:var(--card);padding:12px;border-radius:10px;margin-bottom:12px}
-.fixed{border-left:4px solid orange}
-.name{font-weight:bold}
-.mod{color:var(--primary);font-size:12px;margin-left:6px}
-.small{color:var(--muted);font-size:12px}
-button{border:none;border-radius:8px;padding:6px 10px;margin-right:6px;cursor:pointer}
-.primary{background:var(--primary);color:#fff}
-.actions{margin-top:8px}
-.replyBox{margin-top:10px;padding-left:16px}
-.reply{background:rgba(0,0,0,.05);padding:6px;border-radius:6px;margin-top:6px}
-body.dark .reply{background:rgba(255,255,255,.08)}
-input,textarea{width:100%;padding:8px;border-radius:8px;border:1px solid #ccc;margin-top:6px}
-.hidden{display:none}
-footer{background:var(--card);padding:14px 16px;margin-top:30px}
+body{
+  background:#f0f2f5;
+  font-family: Helvetica, Arial, sans-serif;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  height:100vh;
+}
+.card{
+  background:#fff;
+  width:360px;
+  padding:24px;
+  border-radius:8px;
+  box-shadow:0 2px 10px rgba(0,0,0,.15);
+  text-align:center;
+}
+.lang{
+  font-size:14px;
+  color:#65676b;
+  margin-bottom:6px;
+}
+.lang-img{
+  width:90px; /* tamaño mediano */
+  margin-bottom:14px;
+}
+.logo{
+  font-size:40px;
+  font-weight:700;
+  color:#1877f2;
+  margin-bottom:10px;
+}
+input{
+  width:100%;
+  padding:14px;
+  margin:8px 0;
+  font-size:16px;
+  border:1px solid #dddfe2;
+  border-radius:6px;
+}
+button{
+  width:100%;
+  padding:14px;
+  margin-top:10px;
+  font-size:18px;
+  font-weight:600;
+  background:#1877f2;
+  color:#fff;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+}
+button:hover{background:#166fe5}
+.link{
+  display:block;
+  margin-top:14px;
+  font-size:14px;
+  color:#1877f2;
+  text-decoration:none;
+}
+.link:hover{text-decoration:underline}
+.msg{
+  margin-top:10px;
+  font-size:13px;
+  color:#d93025;
+}
+.bottom-img{
+  width:90px;
+  margin-top:18px;
+}
 </style>
 </head>
 <body>
 
-<header>
-  <div><b id="userLabel">FORGEX</b></div>
-  <div>
-    <button onclick="toggleTheme()">🌙 / ☀️</button>
-    <button id="exitAdmin" class="hidden" onclick="exitAdmin()">Salir</button>
-  </div>
-</header>
+<div class="card">
 
-<div class="container">
-  <h2>Comentarios</h2>
-  <label>Nombre:</label>
-  <input id="name" placeholder="Tu nombre">
-  <textarea id="text" placeholder="Escribe un comentario"></textarea>
-  <button class="primary" onclick="postComment()">Publicar</button>
-  <hr>
-  <div id="comments"></div>
+  <div class="lang">Español</div>
+  <img class="lang-img" src="https://i.imgur.com/BGPquk8.png" alt="Idioma">
+
+  <div class="logo">Facebook</div>
+
+  <form onsubmit="return validar()">
+    <input id="email" type="email"
+      placeholder="Correo electrónico"
+      required>
+
+    <input type="password"
+      placeholder="Contraseña"
+      required>
+
+    <button>Iniciar sesión</button>
+
+    <div id="msg" class="msg"></div>
+  </form>
+
+  <a class="link" href="https://www.facebook.com" target="_blank">
+    ¿Olvidaste tu contraseña?
+  </a>
+
+  <a class="link" href="https://www.facebook.com" target="_blank">
+    Crear cuenta nueva
+  </a>
+
+  <img class="bottom-img" src="https://i.imgur.com/8ZpsYyJ.png" alt="Meta">
+
 </div>
 
-<footer>
-  <div class="container">
-    <b>Bienvenido a FORGEX</b><br>
-    <span class="small">
-      • Respeta a los demás<br>
-      • No spam ni insultos<br>
-      • Los moderadores pueden borrar o fijar comentarios<br>
-      • Al comentar aceptas las reglas de la comunidad
-    </span>
-  </div>
-</footer>
-
 <script>
-let comments = JSON.parse(localStorage.getItem("comments") || "[]");
-let isAdmin = false;
-const adminName = "FORGEX";
+function validar(){
+  const email = document.getElementById("email").value.trim();
+  const msg = document.getElementById("msg");
 
-function save(){ localStorage.setItem("comments", JSON.stringify(comments)); }
-function toggleTheme(){ document.body.classList.toggle("dark"); }
-
-function postComment(){
-  let text = document.getElementById("text").value.trim();
-  let name = document.getElementById("name").value.trim();
-  if(isAdmin) name = adminName;
-  if(!text || !name) return alert("Pon tu nombre y comentario");
-  comments.push({id:Date.now(),name,text,time:new Date().toLocaleString(),likes:0,liked:false,fixed:false,replies:[]});
-  document.getElementById("text").value="";
-  save(); render();
-}
-
-function render(){
-  const c=document.getElementById("comments");
-  c.innerHTML="";
-  [...comments].sort((a,b)=>b.fixed-a.fixed).forEach(com=>{
-    const d=document.createElement("div");
-    d.className="card"+(com.fixed?" fixed":"");
-    d.innerHTML=`
-      <div class="name">Nombre: ${com.name}${com.name===adminName?"<span class='mod'>MOD</span>":""}</div>
-      <div>${com.text}</div>
-      <div class="small">${com.time}</div>
-    `;
-
-    const act=document.createElement("div");
-    act.className="actions";
-
-    const like=document.createElement("button");
-    like.textContent="👍 "+com.likes;
-    like.onclick=()=>{com.liked=!com.liked;com.likes+=com.liked?1:-1;save();render()};
-    act.appendChild(like);
-
-    const rbtn=document.createElement("button");
-    rbtn.textContent="Respuestas ("+com.replies.length+")";
-    act.appendChild(rbtn);
-
-    if(isAdmin){
-      const fix=document.createElement("button");
-      fix.textContent=com.fixed?"Desfijar":"Fijar";
-      fix.onclick=()=>{com.fixed=!com.fixed;save();render()};
-      act.appendChild(fix);
-
-      const del=document.createElement("button");
-      del.textContent="Borrar";
-      del.onclick=()=>{if(confirm("¿Borrar comentario?")){comments=comments.filter(x=>x.id!==com.id);save();render()}};
-      act.appendChild(del);
-    }
-
-    d.appendChild(act);
-
-    const rb=document.createElement("div");
-    rb.className="replyBox hidden";
-
-    const rin=document.createElement("input");
-    rin.placeholder="Responder";
-    const rsend=document.createElement("button");
-    rsend.textContent="Responder";
-    rsend.onclick=()=>{
-      let replyText=rin.value.trim();
-      let replyName=document.getElementById("name").value.trim();
-      if(isAdmin) replyName=adminName;
-      if(!replyText || !replyName) return alert("Debes poner tu nombre para responder");
-      com.replies.push({name:replyName,text:replyText,time:new Date().toLocaleString()});
-      rin.value="";
-      save(); render();
-    };
-
-    rb.appendChild(rin);
-    rb.appendChild(rsend);
-
-    com.replies.forEach((r,i)=>{
-      const rd=document.createElement("div");
-      rd.className="reply";
-      rd.innerHTML=`<b>${r.name}:</b> ${r.text} <span class="small">(${r.time})</span>`;
-      if(isAdmin){
-        const x=document.createElement("button");
-        x.textContent="Eliminar";
-        x.onclick=()=>{if(confirm("¿Borrar respuesta?")){com.replies.splice(i,1);save();render()}};
-        rd.appendChild(x);
-      }
-      rb.appendChild(rd);
-    });
-
-    rbtn.onclick=()=>rb.classList.toggle("hidden");
-    d.appendChild(rb);
-    c.appendChild(d);
-  });
-}
-
-function exitAdmin(){
-  isAdmin=false;
-  document.getElementById("exitAdmin").classList.add("hidden");
-  document.getElementById("userLabel").textContent="FORGEX";
-  render();
-}
-
-document.addEventListener("keydown",e=>{
-  if(e.ctrlKey&&e.shiftKey&&e.key.toLowerCase()==="m"){
-    const n=prompt("Nombre admin");
-    if(n==="joel"){
-      isAdmin=true;
-      document.getElementById("exitAdmin").classList.remove("hidden");
-      document.getElementById("userLabel").textContent="FORGEX (Dueño)";
-      render();
-    }
+  if(!email.endsWith("@gmail.com")){
+    msg.textContent = "El correo debe ser @gmail.com";
+    return false;
   }
-});
 
-render();
+  // Redirige a facebook.com
+  window.location.href = "https://www.facebook.com";
+  return false;
+}
 </script>
+
 </body>
 </html>
+
