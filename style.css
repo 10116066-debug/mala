@@ -1,65 +1,33 @@
-*{
-  box-sizing:border-box;
-  font-family: Arial, sans-serif;
-}
-
-body{
-  margin:0;
-  background:#0b0f1a;
-  color:white;
-}
-
-header{
-  background:#11183a;
-  padding:15px;
-  text-align:center;
-}
-
-nav button{
-  background:#1e2a6d;
-  border:none;
-  color:white;
-  padding:8px 14px;
-  margin:5px;
-  cursor:pointer;
-  border-radius:6px;
-}
-
-nav button:hover{
-  background:#2f45ff;
-}
-
 .games{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
   gap:20px;
   padding:20px;
+  align-items:stretch;
 }
 
 .card{
   background:#141c3a;
   border-radius:12px;
-  padding:10px;
+  padding:12px;
   text-align:center;
   box-shadow:0 0 15px rgba(0,0,0,.5);
+  display:flex;
+  flex-direction:column;
 }
 
 .card img{
   width:100%;
+  height:140px;              /* 🔥 CLAVE */
+  object-fit:cover;          /* 🔥 CLAVE */
   border-radius:10px;
 }
 
-.card button{
-  background:#5b8cff;
-  border:none;
-  padding:10px;
-  color:white;
-  width:100%;
-  border-radius:8px;
-  cursor:pointer;
-  margin-top:10px;
+.card h3{
+  margin:10px 0;
+  flex-grow:1;
 }
 
-.card button:hover{
-  background:#3a5cff;
+.card button{
+  margin-top:auto;
 }
