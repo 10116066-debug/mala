@@ -13,7 +13,6 @@
         .header-left{  display:flex;  align-items:center;  gap:18px}
         header img{  width:52px;height:52px;border-radius:14px;  cursor:pointer}
         header h1{margin:0;font-size:2.2rem;font-weight:900}
-        .feedback-btn{  font-size:1.2rem;  font-weight:900;  cursor:pointer;  user-select:none;  color: var(--text);  text-transform: uppercase;  transition: 0.3s;}.feedback-btn:hover{ color: var(--acc); }
         main{  display:grid;  grid-template-columns:260px 1fr;  min-height:calc(100vh - 90px)}
         aside{  background:var(--sidebar);  border-right:1px solid #1f2a55;  padding:20px;  display:flex;  flex-direction:column;  gap:10px}
         .side-btn{  padding:14px;  border-radius:14px;  font-weight:900;  cursor:pointer;  background:#141c3a;  color:var(--muted);  transition:.2s}.side-btn:hover,.side-btn.active{  background:linear-gradient(135deg,var(--acc),var(--acc2));  color:#fff}
@@ -30,7 +29,7 @@
         .play-btn{  background:linear-gradient(135deg,var(--acc),var(--acc2));  color:#fff}
         
         /* Modales */
-        #infoModal,#imgModal,#feedbackModal,#newsModal{  position:fixed;inset:0;  background:rgba(0,0,0,.9);  display:none;  align-items:center;  justify-content:center;  z-index:9999}
+        #infoModal,#imgModal,#newsModal{  position:fixed;inset:0;  background:rgba(0,0,0,.9);  display:none;  align-items:center;  justify-content:center;  z-index:9999}
         .modal{  background:var(--panel);  border:2px solid var(--acc);  border-radius:22px;  padding:28px;  max-width:520px;  width:95%;  text-align:center;  position: relative; max-height: 90vh; overflow-y: auto;}
         .modal img{  width:100%;  max-height:250px;  object-fit:cover;  border-radius:12px;  margin-bottom:15px;  border: 1px solid var(--acc);}
         .modal input, .modal textarea{  width:100%;  margin:8px 0;  padding:12px;  border-radius:10px;  border:none;  outline:none;  background: #1a2450;  color: white;}
@@ -41,10 +40,8 @@
         .news-item { margin-bottom: 10px; font-size: 0.95rem; line-height: 1.4; }
         .news-tag { color: var(--acc2); font-weight: 900; text-transform: uppercase; font-size: 0.8rem; }
 
-        .warning-text { color: var(--danger); font-size: 0.85rem; margin-top: 5px; display: none; font-weight: bold; }
-        .limit-msg { color: var(--danger); font-weight: 900; margin-bottom: 15px; display: none; }
         .close{  margin-top:18px;  background:#1c2340;  padding:10px;  border-radius:12px;  font-weight:900;  cursor:pointer;  color: white;}
-        .close-x{  position:absolute;  top:20px;right:30px;  font-size:2.5rem;  font-weight:900;  cursor:pointer;  color: white;  z-index: 10000;}
+        .close-x{  position:absolute;  top:20px;right:30px;  font-size:2.5rem;  font-weight:900;  cursor:pointer;  color: white; z-index: 10000;}
         .full{max-width:95%;max-height:95%; object-fit: contain;}
         
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -71,7 +68,6 @@
         <img src="https://i.imgur.com/BBhBqWF.png" onclick="toggleMenu()" class="animate__animated animate__pulse animate__infinite">    
         <h1 class="animate__animated animate__backInLeft">FORGEX HUB</h1>  
     </div>  
-    <div class="feedback-btn animate__animated animate__fadeInRight" onclick="openFeedback()">enviar comentarios</div>
 </header>
 
 <main>
@@ -189,33 +185,16 @@
     <img id="fullImg" class="full animate__animated animate__zoomIn" src="" alt="Imagen Completa">
 </div>
 
-<div id="feedbackModal">  
-    <div class="modal animate__animated animate__bounceIn">    
-        <h2>Enviar comentario</h2>    
-        <div id="limitMsg" class="limit-msg">¡Límite diario alcanzado!  Hemos recibido tus mensajes de hoy. Para mantener la comunidad limpia de spam, el sistema permite un máximo de 3 comentarios por usuario cada 24 horas. ¡Regresa mañana para más! Por ahora, dale un vistazo a los nuevos hacks que tenemos para ti..</div>        
-        <input id="fbName" placeholder="Tu nombre">    
-        <div id="nameWarning" class="warning-text">Tu opinión nos importa</div>        
-        <textarea id="fbMsg" rows="4" placeholder="Escribe tu mensaje"></textarea>        
-        <div id="sendBtn" class="btn play-btn" onclick="sendFeedback()">Enviar</div>    
-        <div class="close" onclick="closeFeedback()">Cancelar</div>  
-    </div>
-</div>
-
 <script>
     let currentImgUrl = '';let sidebarVisible = true;let bypassActive = false;
-    const STORAGE_KEY_COUNT = "forgex_msg_count";const STORAGE_KEY_DATE = "forgex_last_date";const STORAGE_KEY_NAME = "forgex_user_name";const STORAGE_KEY_NAME_DATE = "forgex_name_lock_date";
 
     function closeNews() { document.getElementById('newsModal').style.display = 'none'; }
     window.addEventListener('keydown', (e) => { if (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 'f') { bypassActive = true; resetBypass(); }});
-    function resetBypass() { document.getElementById('limitMsg').style.display = 'none'; document.getElementById('fbMsg').style.display = 'block'; document.getElementById('sendBtn').style.display = 'block'; const inputName = document.getElementById('fbName'); inputName.style.display = 'block'; inputName.disabled = false; document.getElementById('nameWarning').style.display = 'none';}
+    function resetBypass() {}
     function openInfo(url, text) { currentImgUrl = url; document.getElementById('infoImg').src = url; document.getElementById('infoText').innerText = text; document.getElementById('infoModal').style.display = 'flex';}
     function closeInfo() { document.getElementById('infoModal').style.display = 'none';}
     function showImg() { document.getElementById('fullImg').src = currentImgUrl; document.getElementById('imgModal').style.display = 'flex';}
     function closeImg() { document.getElementById('imgModal').style.display = 'none';}
-    function checkLimits() { if (bypassActive) return; const today = new Date().toLocaleDateString(); const lastDate = localStorage.getItem(STORAGE_KEY_DATE); if (lastDate !== today) { localStorage.setItem(STORAGE_KEY_COUNT, "0"); localStorage.setItem(STORAGE_KEY_DATE, today); } const count = parseInt(localStorage.getItem(STORAGE_KEY_COUNT) || "0"); const userName = localStorage.getItem(STORAGE_KEY_NAME); const lockDate = localStorage.getItem(STORAGE_KEY_NAME_DATE); if (count >= 3) { document.getElementById('limitMsg').style.display = 'block'; document.getElementById('fbMsg').style.display = 'none'; document.getElementById('fbName').style.display = 'none'; document.getElementById('sendBtn').style.display = 'none'; } if (userName && lockDate) { const now = new Date().getTime(); const twoDays = 2 * 24 * 60 * 60 * 1000; if (now - parseInt(lockDate) < twoDays) { const inputName = document.getElementById('fbName'); inputName.value = userName; inputName.disabled = true; document.getElementById('nameWarning').style.display = 'block'; } else { localStorage.removeItem(STORAGE_KEY_NAME); localStorage.removeItem(STORAGE_KEY_NAME_DATE); } }}
-    function openFeedback() { checkLimits(); document.getElementById('feedbackModal').style.display = 'flex';}
-    function closeFeedback() { document.getElementById('feedbackModal').style.display = 'none';}
-    function sendFeedback() { const count = parseInt(localStorage.getItem(STORAGE_KEY_COUNT) || "0"); const nameVal = document.getElementById('fbName').value; const msgVal = document.getElementById('fbMsg').value; if (!nameVal || !msgVal) return alert("Por favor completa los campos"); if (!bypassActive && !localStorage.getItem(STORAGE_KEY_NAME)) { localStorage.setItem(STORAGE_KEY_NAME, nameVal); localStorage.setItem(STORAGE_KEY_NAME_DATE, new Date().getTime().toString()); } fetch("https://discord.com/api/webhooks/1452763583556616355/Aj5W5UMcVeKdaWd0iCIpWJchYhkut6JL2oWqsIsqBZozkEOyH9hkX8NoPhtJ6hvNRkOd",{ method:"POST", headers:{ "Content-Type":"application/json" }, body:JSON.stringify({ content:`📩 **Nuevo mensaje FORGEX HUB**\n👤 ${nameVal}\n💬 ${msgVal}` }) }).then(() => { if (!bypassActive) localStorage.setItem(STORAGE_KEY_COUNT, (count + 1).toString()); alert("¡Comentario enviado!"); closeFeedback(); });}
     function openTab(id, el) { document.querySelectorAll('section').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); document.querySelectorAll('.side-btn').forEach(b => b.classList.remove('active')); el.classList.add('active');}
     function toggleMenu() { sidebarVisible = !sidebarVisible; document.querySelector('aside').style.display = sidebarVisible ? 'flex' : 'none'; document.querySelector('main').style.gridTemplateColumns = sidebarVisible ? '260px 1fr' : '1fr';}
 </script>
